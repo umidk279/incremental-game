@@ -8,6 +8,7 @@
     button { padding: 10px 20px; font-size: 16px; margin: 10px; }
     #currencyDisplay { font-size: 24px; margin-bottom: 20px; }
     h1 { font-size: 32px; margin-bottom: 20px; }
+    #resetStatus { font-size: 16px; color: red; margin-top: 10px; }
   </style>
 </head>
 <body>
@@ -18,11 +19,12 @@
 
   <button onclick="buyMultiplier()" id="multiplierBtn">double cash — cost: 10</button>
   <br>
-  <button onclick="buySpeedUpgrade()" id="speedBtn">speedup Tickspeed (−0.02 secs) — cost: 100</button>
+  <button onclick="buySpeedUpgrade()" id="speedBtn">speedup tickspeed (−0.02 secs) — cost: 100</button>
   <br>
-  <button onclick="buyExponentUpgrade()" id="exponentBtn">📈 Рост степени (+0.01) — cost: 200</button>
+  <button onclick="buyExponentUpgrade()" id="exponentBtn">📈 increase self expo grow (+0.01) — cost: 200</button>
   <br>
-  <button onclick="resetGame()">🔄 HARD RESET </button>
+  <button onclick="clickToReset()">🔄 HARD RESET OF ALL</button>
+  <div id="resetStatus"></div>
 
   <script>
     let currency = 1;
@@ -40,16 +42,19 @@
     let exponentCost = 200;
     const maxExponentLevel = 5;
 
+    let resetClicks = 0;
+    const resetRequiredClicks = 10;
+
     let autoIntervalId = null;
 
     function updateCurrencyDisplay() {
       document.getElementById("currencyDisplay").textContent = `💰 cash: ${Math.floor(currency)}`;
       document.getElementById("multiplierBtn").textContent =
-        `Double cash (Lvl ${multiplierLevel}) — cost: ${Math.floor(multiplierCost)}`;
+        `double cash ×2 (Lvl ${multiplierLevel}) — cost: ${Math.floor(multiplierCost)}`;
       document.getElementById("speedBtn").textContent =
         speedLevel >= maxSpeedLevel
           ? `Макс. ускорений (${speedLevel})`
-          : `Speedup tickspeed (−0.02 secs) (Lvl ${speedLevel}) — cost: ${Math.floor(speedCost)}`;
+          : `speedup tickspeed (−0.02 сек) (Lvl ${speedLevel}) — cost: ${Math.floor(speedCost)}`;
       document.getElementById("speedBtn").disabled = speedLevel >= maxSpeedLevel;
 
       document.getElementById("exponentBtn").textContent =
@@ -138,6 +143,18 @@
       }
     }
 
+    function clickToReset() {
+      resetClicks++;
+      const remaining = resetRequiredClicks - resetClicks;
+      if (remaining > 0) {
+        document.getElementById("resetStatus").textContent = `Осталось ${remaining} кликов до сброса`;
+      } else {
+        document.getElementById("resetStatus").textContent = `Прогресс сброшен!`;
+        resetGame();
+        resetClicks = 0;
+      }
+    }
+
     function resetGame() {
       localStorage.removeItem("autoGameSave");
       currency = 1;
@@ -163,4 +180,6 @@
 
 </body>
 </html>
+
+
 
