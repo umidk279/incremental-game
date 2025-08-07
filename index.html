@@ -9,6 +9,18 @@
     #currencyDisplay { font-size: 24px; margin-bottom: 20px; }
     h1 { font-size: 32px; margin-bottom: 20px; }
     #resetStatus { font-size: 16px; color: red; margin-top: 10px; }
+
+    @keyframes blink {
+      0%   { opacity: 1; }
+      50%  { opacity: 0; }
+      100% { opacity: 1; }
+    }
+
+    .blinking {
+      animation: blink 0.6s infinite;
+      font-weight: bold;
+      color: crimson;
+    }
   </style>
 </head>
 <body>
@@ -23,7 +35,7 @@
   <br>
   <button onclick="buyExponentUpgrade()" id="exponentBtn">📈 increase self expo grow (+0.01) — cost: 200</button>
   <br>
-  <button onclick="clickToReset()">🔄 HARD RESET OF ALL</button>
+  <button onclick="clickToReset()">🔄 HARD RESET ALL</button>
   <div id="resetStatus"></div>
 
   <script>
@@ -50,17 +62,17 @@
     function updateCurrencyDisplay() {
       document.getElementById("currencyDisplay").textContent = `💰 cash: ${Math.floor(currency)}`;
       document.getElementById("multiplierBtn").textContent =
-        `double cash ×2 (Lvl ${multiplierLevel}) — cost: ${Math.floor(multiplierCost)}`;
+        `double cash (Lvl ${multiplierLevel}) — cost: ${Math.floor(multiplierCost)}`;
       document.getElementById("speedBtn").textContent =
         speedLevel >= maxSpeedLevel
           ? `Макс. ускорений (${speedLevel})`
-          : `speedup tickspeed (−0.02 сек) (Lvl ${speedLevel}) — cost: ${Math.floor(speedCost)}`;
+          : `speedup tickspeed (−0.02 secs) (Lvl ${speedLevel}) — cost: ${Math.floor(speedCost)}`;
       document.getElementById("speedBtn").disabled = speedLevel >= maxSpeedLevel;
 
       document.getElementById("exponentBtn").textContent =
         exponentLevel >= maxExponentLevel
           ? `Макс. степень (${exponentBase.toFixed(2)})`
-          : `📈 increase self expo grow (+0.01) (Lvl ${exponentLevel}) — cost: ${Math.floor(exponentCost)}`;
+          : `📈 increase self expo grow (+0.01) (Lvl ${exponentLevel}) — Цена: ${Math.floor(exponentCost)}`;
       document.getElementById("exponentBtn").disabled = exponentLevel >= maxExponentLevel;
     }
 
@@ -121,7 +133,8 @@
         speedCost,
         exponentBase,
         exponentLevel,
-        exponentCost
+        exponentCost,
+        resetClicks
       };
       localStorage.setItem("autoGameSave", JSON.stringify(saveData));
     }
@@ -140,18 +153,28 @@
         exponentBase = data.exponentBase;
         exponentLevel = data.exponentLevel;
         exponentCost = data.exponentCost;
+        resetClicks = data.resetClicks || 0;
       }
     }
 
     function clickToReset() {
       resetClicks++;
       const remaining = resetRequiredClicks - resetClicks;
+      const status = document.getElementById("resetStatus");
+
       if (remaining > 0) {
-        document.getElementById("resetStatus").textContent = `Осталось ${remaining} кликов до сброса`;
+        status.textContent = `Осталось ${remaining} кликов до сброса`;
+        if (remaining === 1) {
+          status.classList.add("blinking");
+        } else {
+          status.classList.remove("blinking");
+        }
+        saveGame();
       } else {
-        document.getElementById("resetStatus").textContent = `Прогресс сброшен!`;
-        resetGame();
+        status.textContent = `Прогресс сброшен!`;
+        status.classList.remove("blinking");
         resetClicks = 0;
+        resetGame();
       }
     }
 
@@ -167,6 +190,7 @@
       exponentBase = 0.15;
       exponentLevel = 0;
       exponentCost = 200;
+      resetClicks = 0;
       restartAutoIncrement();
       updateCurrencyDisplay();
     }
@@ -180,6 +204,3 @@
 
 </body>
 </html>
-
-
-
