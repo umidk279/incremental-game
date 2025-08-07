@@ -72,7 +72,7 @@
       document.getElementById("exponentBtn").textContent =
         exponentLevel >= maxExponentLevel
           ? `Макс. степень (${exponentBase.toFixed(2)})`
-          : `📈 increase self expo grow (+0.01) (Lvl ${exponentLevel}) — Цена: ${Math.floor(exponentCost)}`;
+          : `📈 increase self expo grow (+0.01) (Lvl ${exponentLevel}) — cost: ${Math.floor(exponentCost)}`;
       document.getElementById("exponentBtn").disabled = exponentLevel >= maxExponentLevel;
     }
 
@@ -204,6 +204,7 @@
 
 </body>
 </html>
+
 
 
 
