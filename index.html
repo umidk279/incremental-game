@@ -163,7 +163,7 @@
       const status = document.getElementById("resetStatus");
 
       if (remaining > 0) {
-        status.textContent = `Осталось ${remaining} кликов до сброса`;
+        status.textContent = `remaining ${remaining} clicks to hard reset`;
         if (remaining === 1) {
           status.classList.add("blinking");
         } else {
@@ -171,7 +171,7 @@
         }
         saveGame();
       } else {
-        status.textContent = `Прогресс сброшен!`;
+        status.textContent = `progress lost!`;
         status.classList.remove("blinking");
         resetClicks = 0;
         resetGame();
@@ -204,3 +204,4 @@
 
 </body>
 </html>
+
