@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Incrementia 1.0</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; margin-top: 50px; }
+    button { padding: 10px 20px; font-size: 16px; margin: 10px; }
+    #currencyDisplay { font-size: 24px; margin-bottom: 20px; }
+    h1 { font-size: 32px; margin-bottom: 20px; }
+  </style>
+</head>
+<body>
+
+  <h1>🎮 Incrementia 1.0</h1>
+
+  <div id="currencyDisplay">💰 Валюта: 1</div>
+
+  <button onclick="buyMultiplier()" id="multiplierBtn">double cash — cost: 10</button>
+  <br>
+  <button onclick="buySpeedUpgrade()" id="speedBtn">speedup Tickspeed (−0.02 secs) — cost: 100</button>
+  <br>
+  <button onclick="buyExponentUpgrade()" id="exponentBtn">📈 Рост степени (+0.01) — cost: 200</button>
+  <br>
+  <button onclick="resetGame()">🔄 HARD RESET </button>
+
+  <script>
+    let currency = 1;
+    let multiplier = 1;
+    let multiplierLevel = 0;
+    let multiplierCost = 10;
+
+    let interval = 1000;
+    let speedLevel = 0;
+    let speedCost = 100;
+    const maxSpeedLevel = 48;
+
+    let exponentBase = 0.15;
+    let exponentLevel = 0;
+    let exponentCost = 200;
+    const maxExponentLevel = 5;
+
+    let autoIntervalId = null;
+
+    function updateCurrencyDisplay() {
+      document.getElementById("currencyDisplay").textContent = `💰 cash: ${Math.floor(currency)}`;
+      document.getElementById("multiplierBtn").textContent =
+        `Double cash (Lvl ${multiplierLevel}) — cost: ${Math.floor(multiplierCost)}`;
+      document.getElementById("speedBtn").textContent =
+        speedLevel >= maxSpeedLevel
+          ? `Макс. ускорений (${speedLevel})`
+          : `Speedup tickspeed (−0.02 secs) (Lvl ${speedLevel}) — cost: ${Math.floor(speedCost)}`;
+      document.getElementById("speedBtn").disabled = speedLevel >= maxSpeedLevel;
+
+      document.getElementById("exponentBtn").textContent =
+        exponentLevel >= maxExponentLevel
+          ? `Макс. степень (${exponentBase.toFixed(2)})`
+          : `📈 increase self expo grow (+0.01) (Lvl ${exponentLevel}) — cost: ${Math.floor(exponentCost)}`;
+      document.getElementById("exponentBtn").disabled = exponentLevel >= maxExponentLevel;
+    }
+
+    function buyMultiplier() {
+      if (currency >= multiplierCost) {
+        currency -= multiplierCost;
+        multiplier *= 2;
+        multiplierLevel++;
+        multiplierCost *= 3;
+        saveGame();
+        updateCurrencyDisplay();
+      }
+    }
+
+    function buySpeedUpgrade() {
+      if (currency >= speedCost && speedLevel < maxSpeedLevel) {
+        currency -= speedCost;
+        speedLevel++;
+        interval = Math.max(20, interval - 20);
+        speedCost *= 1.4;
+        restartAutoIncrement();
+        saveGame();
+        updateCurrencyDisplay();
+      }
+    }
+
+    function buyExponentUpgrade() {
+      if (currency >= exponentCost && exponentLevel < maxExponentLevel) {
+        currency -= exponentCost;
+        exponentLevel++;
+        exponentBase += 0.01;
+        exponentCost *= 4;
+        saveGame();
+        updateCurrencyDisplay();
+      }
+    }
+
+    function autoIncrement() {
+      let gain = Math.pow(currency, exponentBase) / 4 + 1;
+      currency += gain * multiplier;
+      saveGame();
+      updateCurrencyDisplay();
+    }
+
+    function restartAutoIncrement() {
+      if (autoIntervalId) clearInterval(autoIntervalId);
+      autoIntervalId = setInterval(autoIncrement, interval);
+    }
+
+    function saveGame() {
+      const saveData = {
+        currency,
+        multiplier,
+        multiplierLevel,
+        multiplierCost,
+        interval,
+        speedLevel,
+        speedCost,
+        exponentBase,
+        exponentLevel,
+        exponentCost
+      };
+      localStorage.setItem("autoGameSave", JSON.stringify(saveData));
+    }
+
+    function loadGame() {
+      const saved = localStorage.getItem("autoGameSave");
+      if (saved) {
+        const data = JSON.parse(saved);
+        currency = data.currency;
+        multiplier = data.multiplier;
+        multiplierLevel = data.multiplierLevel;
+        multiplierCost = data.multiplierCost;
+        interval = data.interval;
+        speedLevel = data.speedLevel;
+        speedCost = data.speedCost;
+        exponentBase = data.exponentBase;
+        exponentLevel = data.exponentLevel;
+        exponentCost = data.exponentCost;
+      }
+    }
+
+    function resetGame() {
+      localStorage.removeItem("autoGameSave");
+      currency = 1;
+      multiplier = 1;
+      multiplierLevel = 0;
+      multiplierCost = 10;
+      interval = 1000;
+      speedLevel = 0;
+      speedCost = 100;
+      exponentBase = 0.15;
+      exponentLevel = 0;
+      exponentCost = 200;
+      restartAutoIncrement();
+      updateCurrencyDisplay();
+    }
+
+    window.onload = function() {
+      loadGame();
+      updateCurrencyDisplay();
+      restartAutoIncrement();
+    };
+  </script>
+
+</body>
+</html>
