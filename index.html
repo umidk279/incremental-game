@@ -255,39 +255,30 @@ function updateCurrencyDisplay() {
       ? `Макс. степень (${exponentBase.toFixed(2)})`
       : `📈 increase self expo grow (+0.01) (Lvl ${exponentLevel}) — cost: ${formatNumber(exponentCost)}`;
   document.getElementById("exponentBtn").disabled = exponentLevel >= maxExponentLevel;
-let baseCurrency = 1;
-let startUpgradeLevel = 0;
-let startUpgradeCost = 10000;
+let selfMultiplyLevel = 0;
+let selfMultiplyCost = 10000;
+let selfMultiplyBought = false;
 
-function updateUI() {
-  document.getElementById("currencyDisplay").textContent = Math.floor(currency);
-  document.getElementById("prestigeDisplay").textContent = prestige.toFixed(2);
-  document.getElementById("prestigePreview").textContent =
-    currency >= 1e6 ? `Ты получишь: ${calculatePrestige(currency).toFixed(2)} престижа` : '';
-  document.getElementById("prestigeBtn").disabled = currency < 1e6;
-  document.getElementById("upgradeBtn").textContent =
-    `💥 Удвоить доход (Lvl ${upgradeLevel}) — cost: ${upgradeCost}`;
-  document.getElementById("upgradeStartBtn").textContent =
-    `🔧 Базовая валюта (Lvl ${startUpgradeLevel}) — cost: ${startUpgradeCost}`;
-}
-
-document.getElementById("upgradeStartBtn").onclick = () => {
-  if (currency >= startUpgradeCost) {
-    currency -= startUpgradeCost;
-    startUpgradeLevel++;
-    startUpgradeCost *= 4;
-    baseCurrency = Math.pow(1.05, startUpgradeLevel);
+document.getElementById("selfMultiplyBtn").onclick = () => {
+  if (!selfMultiplyBought && currency >= selfMultiplyCost) {
+    currency -= selfMultiplyCost;
+    selfMultiplyLevel = 1;
+    selfMultiplyBought = true;
+    currency *= Math.log(currency) / Math.log(3) + 1;
+    document.getElementById("selfMultiplyBtn").disabled = true;
     updateUI();
   }
 };
 
-document.getElementById("gainBtn").onclick = () => {
-  currency += baseCurrency * multiplier;
-  updateUI();
-};
+function updateUI() {
+  document.getElementById("currencyDisplay").textContent = Math.floor(currency);
+  document.getElementById("selfMultiplyBtn").textContent =
+    `🧠 Самоумножение (Lvl ${selfMultiplyLevel}) — cost: ${selfMultiplyCost}`;
+}
 
 </body>
 </html>
+
 
 
 
