@@ -255,8 +255,6 @@ function updateCurrencyDisplay() {
       ? `Макс. степень (${exponentBase.toFixed(2)})`
       : `📈 increase self expo grow (+0.01) (Lvl ${exponentLevel}) — cost: ${formatNumber(exponentCost)}`;
   document.getElementById("exponentBtn").disabled = exponentLevel >= maxExponentLevel;
-}
-<!-- Престиж UI -->
 <div style="margin-top:40px; text-align:center;">
   <button id="prestigeBtn" style="padding:10px 20px; font-size:18px; background-color:#4CAF50; color:white; border:none; border-radius:5px; cursor:pointer;">
     Сделать престиж
@@ -271,9 +269,7 @@ function updateCurrencyDisplay() {
 
   function updatePrestigeUI() {
     const prestigeAmount = calculatePrestige(currency);
-    const previewText = `Ты получишь: ${prestigeAmount.toFixed(2)} престижа`;
-    document.getElementById("prestigePreview").textContent = previewText;
-
+    document.getElementById("prestigePreview").textContent = `Ты получишь: ${prestigeAmount.toFixed(2)} престижа`;
     const btn = document.getElementById("prestigeBtn");
     btn.disabled = currency < 1e6;
     btn.style.opacity = btn.disabled ? "0.5" : "1";
@@ -289,7 +285,6 @@ function updateCurrencyDisplay() {
     }
   });
 
-  // Вставим в игровой цикл
   const originalAutoIncrement = autoIncrement;
   autoIncrement = function() {
     originalAutoIncrement();
@@ -297,9 +292,9 @@ function updateCurrencyDisplay() {
   };
 </script>
 
-  
 </body>
 </html>
+
 
 
 
