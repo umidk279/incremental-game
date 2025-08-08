@@ -256,75 +256,84 @@ function updateCurrencyDisplay() {
       : `📈 increase self expo grow (+0.01) (Lvl ${exponentLevel}) — cost: ${formatNumber(exponentCost)}`;
   document.getElementById("exponentBtn").disabled = exponentLevel >= maxExponentLevel;
 }
-<!-- Престиж UI -->
-<div style="margin-top:40px; text-align:center;">
-  <button id="prestigeBtn" style="padding:10px 20px; font-size:18px; background-color:#4CAF50; color:white; border:none; border-radius:5px; cursor:pointer;">
-    Сделать престиж
-  </button>
-  <div id="prestigePreview" style="margin-top:10px; font-size:16px;"></div>
-</div>
+<!DOCTYPE html>
+<html>
+  <body>
+    <div id="currencyDisplay" style="font-size:24px; margin-bottom:20px;"></div>
 
-<script>
-  let currency = 0; // ← подключи свою переменную, если она уже есть
+    <!-- Престиж UI -->
+    <div style="margin-top:40px; text-align:center;">
+      <button id="prestigeBtn" style="padding:10px 20px; font-size:18px; background-color:#4CAF50; color:white; border:none; border-radius:5px; cursor:pointer;">
+        Сделать престиж
+      </button>
+      <div id="prestigePreview" style="margin-top:10px; font-size:16px;"></div>
+    </div>
 
-  function formatNumber(num) {
-    if (isNaN(num)) return "❌";
-    if (!isFinite(num)) return "∞";
+    <script>
+      let currency = 0;
 
-    const absNum = Math.abs(num);
-    if (absNum > 0 && absNum < 0.001) {
-      return num.toExponential(2);
-    }
+      function formatNumber(num) {
+        if (isNaN(num)) return "❌";
+        if (!isFinite(num)) return "∞";
 
-    const suffixes = [
-      "", "K", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc", "No",
-      "De", "Ude", "Dde", "Tde", "Qade", "Qide", "SxDe", "SpDe", "OcDe", "NoDe"
-    ];
+        const absNum = Math.abs(num);
+        if (absNum > 0 && absNum < 0.001) {
+          return num.toExponential(2);
+        }
 
-    const tier = Math.floor(Math.log10(absNum) / 3);
-    if (tier === 0) return num.toFixed(2);
+        const suffixes = [
+          "", "K", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc", "No",
+          "De", "Ude", "Dde", "Tde", "Qade", "Qide", "SxDe", "SpDe", "OcDe", "NoDe"
+        ];
 
-    const suffix = suffixes[tier] ?? `e${tier * 3}`;
-    const scale = Math.pow(10, tier * 3);
-    const scaled = num / scale;
+        const tier = Math.floor(Math.log10(absNum) / 3);
+        if (tier === 0) return num.toFixed(2);
 
-    return scaled.toFixed(2) + suffix;
-  }
+        const suffix = suffixes[tier] ?? `e${tier * 3}`;
+        const scale = Math.pow(10, tier * 3);
+        const scaled = num / scale;
 
-  function calculatePrestige(c) {
-    return (Math.pow(c, 0.15) / 3 + 1);
-  }
+        return scaled.toFixed(2) + suffix;
+      }
 
-  function updatePrestigeUI() {
-    const prestigeAmount = calculatePrestige(currency);
-    const previewText = `Ты получишь: ${prestigeAmount.toFixed(2)} престижа`;
-    document.getElementById("prestigePreview").textContent = previewText;
+      function calculatePrestige(c) {
+        return (Math.pow(c, 0.15) / 3 + 1);
+      }
 
-    const btn = document.getElementById("prestigeBtn");
-    btn.disabled = currency < 1e6;
-    btn.style.opacity = btn.disabled ? "0.5" : "1";
-  }
+      function updatePrestigeUI() {
+        const prestigeAmount = calculatePrestige(currency);
+        const previewText = `Ты получишь: ${prestigeAmount.toFixed(2)} престижа`;
+        document.getElementById("prestigePreview").textContent = previewText;
 
-  document.getElementById("prestigeBtn").addEventListener("click", () => {
-    if (currency >= 1e6) {
-      const gainedPrestige = calculatePrestige(currency);
-      alert(`Ты получил ${gainedPrestige.toFixed(2)} престижа!`);
-      currency = 0; // сброс
-      updatePrestigeUI();
-    }
-  });
+        const btn = document.getElementById("prestigeBtn");
+        btn.disabled = currency < 1e6;
+        btn.style.opacity = btn.disabled ? "0.5" : "1";
+      }
 
-  // Тестовое обновление валюты
-  setInterval(() => {
-    currency += Math.random() * 100000;
-    document.getElementById("currencyDisplay").textContent = formatNumber(currency);
-    updatePrestigeUI();
-  }, 500);
+      document.getElementById("prestigeBtn").addEventListener("click", () => {
+        if (currency >= 1e6) {
+          const gainedPrestige = calculatePrestige(currency);
+          alert(`Ты получил ${gainedPrestige.toFixed(2)} престижа!`);
+          currency = 0;
+          updatePrestigeUI();
+        }
+      });
+
+      setInterval(() => {
+        currency += Math.random() * 100000;
+        document.getElementById("currencyDisplay").textContent = formatNumber(currency);
+        updatePrestigeUI();
+      }, 500);
+    </script>
+  </body>
+</html>
+
 </script>
 
 }
 </body>
 </html>
+
 
 
 
