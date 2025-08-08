@@ -232,36 +232,35 @@
   };
 </script>
 <script>
-  // 🎓 Форматирование чисел в научной нотации
-  function formatNumber(n) {
-    if (n < 1000) return n.toString();
-    const exponent = Math.floor(Math.log10(n));
-    const mantissa = n / Math.pow(10, exponent);
-    return mantissa.toFixed(2).replace(/\.00$/, "") + "e" + exponent;
-  }
+function formatNumber(n) {
+  if (n < 1000) return n.toString();
+  const exponent = Math.floor(Math.log10(n));
+  const mantissa = n / Math.pow(10, exponent);
+  return mantissa.toFixed(2).replace(/\.00$/, "") + "e" + exponent;
+}
 
-  // 🔁 Обновление интерфейса
-  function updateCurrencyDisplay() {
-    document.getElementById("currencyDisplay").textContent = `💰 cash: ${formatNumber(currency)}`;
-    document.getElementById("multiplierBtn").textContent =
-      `double cash (Lvl ${multiplierLevel}) — cost: ${formatNumber(multiplierCost)}`;
-    document.getElementById("speedBtn").textContent =
-      speedLevel >= maxSpeedLevel
-        ? `Макс. ускорений (${speedLevel})`
-        : `speedup tickspeed (−0.02 secs) (Lvl ${speedLevel}) — cost: ${formatNumber(speedCost)}`;
-    document.getElementById("speedBtn").disabled = speedLevel >= maxSpeedLevel;
+// 🔁 Обновление интерфейса с научной нотацией
+function updateCurrencyDisplay() {
+  document.getElementById("currencyDisplay").textContent = `💰 cash: ${formatNumber(currency)}`;
+  document.getElementById("multiplierBtn").textContent =
+    `double cash (Lvl ${multiplierLevel}) — cost: ${formatNumber(multiplierCost)}`;
+  document.getElementById("speedBtn").textContent =
+    speedLevel >= maxSpeedLevel
+      ? `Макс. ускорений (${speedLevel})`
+      : `speedup tickspeed (−0.02 secs) (Lvl ${speedLevel}) — cost: ${formatNumber(speedCost)}`;
+  document.getElementById("speedBtn").disabled = speedLevel >= maxSpeedLevel;
 
-    document.getElementById("exponentBtn").textContent =
-      exponentLevel >= maxExponentLevel
-        ? `Макс. степень (${exponentBase.toFixed(2)})`
-        : `📈 increase self expo grow (+0.01) (Lvl ${exponentLevel}) — cost: ${formatNumber(exponentCost)}`;
-    document.getElementById("exponentBtn").disabled = exponentLevel >= maxExponentLevel;
-  }
-</script>
+  document.getElementById("exponentBtn").textContent =
+    exponentLevel >= maxExponentLevel
+      ? `Макс. степень (${exponentBase.toFixed(2)})`
+      : `📈 increase self expo grow (+0.01) (Lvl ${exponentLevel}) — cost: ${formatNumber(exponentCost)}`;
+  document.getElementById("exponentBtn").disabled = exponentLevel >= maxExponentLevel;
+}
 
 </script>
 </body>
 </html>
+
 
 
 
