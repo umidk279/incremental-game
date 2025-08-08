@@ -255,88 +255,80 @@ function updateCurrencyDisplay() {
       ? `Макс. степень (${exponentBase.toFixed(2)})`
       : `📈 increase self expo grow (+0.01) (Lvl ${exponentLevel}) — cost: ${formatNumber(exponentCost)}`;
   document.getElementById("exponentBtn").disabled = exponentLevel >= maxExponentLevel;
-<div style="margin-top:40px; text-align:center;">
-  <button id="prestigeBtn">Сделать престиж</button>
-  <div id="prestigePreview"></div>
-  <div id="prestigeTotal"></div>
-  <button id="prestigeUpgrade1">💥 Удвоить доход — cost: 5</button>
-</div>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Incrementia Prestige</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; margin-top: 40px; }
+    button { margin: 10px; padding: 10px 20px; font-size: 16px; }
+  </style>
+</head>
+<body>
+
+<h1>💰 Валюта: <span id="currencyDisplay">1</span></h1>
+<h2>🔮 Престиж: <span id="prestigeDisplay">0</span></h2>
+
+<button id="gainBtn">Заработать</button>
+<button id="prestigeBtn">Сделать престиж</button>
+<p id="prestigePreview"></p>
+
+<button id="upgradeBtn">💥 Удвоить доход (Lvl 0) — cost: 5</button>
 
 <script>
-  let prestigePoints = 0;
-  let prestigeUpgrade1Level = 0;
-  let prestigeUpgrade1Cost = 5;
+  let currency = 1;
+  let prestige = 0;
+  let multiplier = 1;
+
+  let upgradeLevel = 0;
+  let upgradeCost = 5;
+
+  function updateUI() {
+    document.getElementById("currencyDisplay").textContent = Math.floor(currency);
+    document.getElementById("prestigeDisplay").textContent = prestige.toFixed(2);
+    document.getElementById("prestigePreview").textContent =
+      currency >= 1e6 ? `Ты получишь: ${calculatePrestige(currency).toFixed(2)} престижа` : '';
+    document.getElementById("prestigeBtn").disabled = currency < 1e6;
+    document.getElementById("upgradeBtn").textContent =
+      `💥 Удвоить доход (Lvl ${upgradeLevel}) — cost: ${upgradeCost}`;
+  }
 
   function calculatePrestige(c) {
     return Math.pow(c, 0.15) / 3 + 1;
   }
 
-  function updatePrestigeUI() {
-    document.getElementById("prestigePreview").textContent =
-      `Ты получишь: ${calculatePrestige(currency).toFixed(2)} престижа`;
-    document.getElementById("prestigeTotal").textContent =
-      `🔮 Всего престижа: ${prestigePoints.toFixed(2)}`;
-    document.getElementById("prestigeBtn").disabled = currency < 1e6;
-    document.getElementById("prestigeUpgrade1").textContent =
-      `💥 Удвоить доход (Lvl ${prestigeUpgrade1Level}) — cost: ${prestigeUpgrade1Cost}`;
-  }
+  document.getElementById("gainBtn").onclick = () => {
+    currency += 1 * multiplier;
+    updateUI();
+  };
 
-  document.getElementById("prestigeBtn").addEventListener("click", () => {
+  document.getElementById("prestigeBtn").onclick = () => {
     if (currency >= 1e6) {
-      const gained = calculatePrestige(currency);
-      prestigePoints += gained;
+      prestige += calculatePrestige(currency);
       currency = 1;
-      updateCurrencyDisplay();
-      updatePrestigeUI();
-      saveGame();
+      updateUI();
     }
-  });
+  };
 
-  document.getElementById("prestigeUpgrade1").addEventListener("click", () => {
-    if (prestigePoints >= prestigeUpgrade1Cost) {
-      prestigePoints -= prestigeUpgrade1Cost;
-      prestigeUpgrade1Level++;
-      prestigeUpgrade1Cost *= 4;
+  document.getElementById("upgradeBtn").onclick = () => {
+    if (prestige >= upgradeCost) {
+      prestige -= upgradeCost;
+      upgradeLevel++;
+      upgradeCost *= 4;
       multiplier *= 2;
-      updateCurrencyDisplay();
-      updatePrestigeUI();
-      saveGame();
-    }
-  });
-
-  const originalAutoIncrement = autoIncrement;
-  autoIncrement = function() {
-    originalAutoIncrement();
-    updatePrestigeUI();
-  };
-
-  const originalSaveGame = saveGame;
-  saveGame = function() {
-    originalSaveGame();
-    const prestigeData = {
-      prestigePoints,
-      prestigeUpgrade1Level,
-      prestigeUpgrade1Cost
-    };
-    localStorage.setItem("prestigeSave", JSON.stringify(prestigeData));
-  };
-
-  const originalLoadGame = loadGame;
-  loadGame = function() {
-    originalLoadGame();
-    const saved = localStorage.getItem("prestigeSave");
-    if (saved) {
-      const data = JSON.parse(saved);
-      prestigePoints = data.prestigePoints || 0;
-      prestigeUpgrade1Level = data.prestigeUpgrade1Level || 0;
-      prestigeUpgrade1Cost = data.prestigeUpgrade1Cost || 5;
-      multiplier *= Math.pow(2, prestigeUpgrade1Level);
+      updateUI();
     }
   };
+
+  updateUI();
 </script>
 
 </body>
 </html>
+
+</body>
+</html>
+
 
 
 
