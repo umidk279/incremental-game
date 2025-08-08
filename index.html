@@ -258,8 +258,41 @@ function updateCurrencyDisplay() {
 }
 
 </script>
+<script>
+let useScientific = false; // по умолчанию — обычный формат
+
+function formatNumber(value) {
+  const num = Number(value);
+  if (isNaN(num)) return "❌";
+  return useScientific
+    ? num.toExponential(3) // Scientific notification with 3 numbers
+    : num.toLocaleString('fullwide', { useGrouping: false }); // Basic Style
+}
+
+function toggleNotation() {
+  useScientific = !useScientific;
+  document.getElementById("notationToggle").textContent =
+    "Style: " + (useScientific ? "scientific" : "basic");
+  updateExponentDisplay();
+}
+
+function updateExponentDisplay() {
+  document.getElementById("exponentBtn").textContent =
+    `Макс. степень ${formatNumber(exponentBase)}`;
+  document.getElementById("exponentDesc").textContent =
+    `☑ increase self expo grow (+0.01) (Lvl ${exponentLevel}) – cost: ${formatNumber(exponentCost)}`;
+  document.getElementById("exponentBtn").disabled = exponentLevel >= maxExponentLevel;
+}
+
+// Инициализация при загрузке
+window.onload = () => {
+  updateExponentDisplay();
+};
+</script>
+
 </body>
 </html>
+
 
 
 
