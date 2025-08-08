@@ -255,59 +255,18 @@ function updateCurrencyDisplay() {
       ? `Макс. степень (${exponentBase.toFixed(2)})`
       : `📈 increase self expo grow (+0.01) (Lvl ${exponentLevel}) — cost: ${formatNumber(exponentCost)}`;
   document.getElementById("exponentBtn").disabled = exponentLevel >= maxExponentLevel;
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Incrementia — Самоумножение</title>
-  <style>
-    body { font-family: sans-serif; text-align: center; margin-top: 40px; }
-    button { margin: 10px; padding: 10px 20px; font-size: 16px; }
-    #selfMultiplyBtn { float: right; }
-  </style>
-</head>
-<body>
-
-<h1>💰 Валюта: <span id="currencyDisplay">100000</span></h1>
-
-<button id="gainBtn">Заработать</button>
-<button id="selfMultiplyBtn">🧠 Самоумножение (Lvl 0) — cost: 10000</button>
-
 <script>
-  let currency = 100000;
-  let selfMultiplyLevel = 0;
-  let selfMultiplyCost = 10000;
-  let selfMultiplyBought = false;
-
-  document.getElementById("gainBtn").onclick = () => {
-    currency += 100;
-    updateUI();
-  };
-
-  document.getElementById("selfMultiplyBtn").onclick = () => {
-    if (!selfMultiplyBought && currency >= selfMultiplyCost) {
-      currency -= selfMultiplyCost;
-      selfMultiplyLevel = 1;
-      selfMultiplyBought = true;
-      currency *= Math.log(currency) / Math.log(3) + 1;
-      document.getElementById("selfMultiplyBtn").disabled = true;
-      updateUI();
-    }
-  };
-
-  function updateUI() {
-    document.getElementById("currencyDisplay").textContent = Math.floor(currency);
-    document.getElementById("selfMultiplyBtn").textContent =
-      `🧠 Самоумножение (Lvl ${selfMultiplyLevel}) — cost: ${selfMultiplyCost}`;
-  }
-
-  updateUI();
+let autoMultiplierStep = 1;
+setInterval(() => {
+  const currentMultiplier = autoMultiplierStep * 2;
+  currency *= currentMultiplier;
+  autoMultiplierStep++;
+}, 100000);
 </script>
 
 </body>
 </html>
 
-</body>
-</html>
 
 
 
