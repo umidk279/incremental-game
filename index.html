@@ -259,13 +259,21 @@ function updateCurrencyDisplay() {
 function formatNumber(num) {
   if (isNaN(num)) return "❌";
 
+  const absNum = Math.abs(num);
+
+  // Маленькие числа: < 0.001 → научная нотация
+  if (absNum > 0 && absNum < 0.001) {
+    return num.toExponential(3); // например: 1.234e-4
+  }
+
   const suffixes = [
     "", "K", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc", "No",
     "De", "Ude", "Dde", "Tde", "Qade", "Qide", "SxDe", "SpDe", "OcDe", "NoDe"
   ];
 
-  let tier = Math.floor(Math.log10(Math.abs(num)) / 3);
-  if (tier === 0) return num.toString();
+  const tier = Math.floor(Math.log10(absNum) / 3);
+
+  if (tier === 0) return num.toFixed(3); // Показываем до тысячных
 
   const suffix = suffixes[tier] || `e${tier * 3}`;
   const scale = Math.pow(10, tier * 3);
@@ -273,9 +281,12 @@ function formatNumber(num) {
 
   return scaled.toFixed(3) + suffix;
 }
+
+}
   
 </body>
 </html>
+
 
 
 
