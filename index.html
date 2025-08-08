@@ -202,15 +202,26 @@
     };
   </script>
 <body>
-  <!-- твоя игра, интерфейс и т.д. -->
+<!-- Кнопка запуска -->
+<button id="playMusicBtn" style="position:fixed; bottom:50px; right:10px; z-index:9999;">▶️ turn on music</button>
 
-  <!-- ВСТАВЬ СЮДА -->
-  <iframe id="bgMusic" width="0" height="0" src="https://www.youtube.com/embed/mzNd9X857tM?autoplay=1&loop=1&playlist=mzNd9X857tM" frameborder="0" allow="autoplay"></iframe>
-  <div id="musicCredit">🎶 Kaptain – Cartoon Scene</div>
-</body>
+<!-- music (from start without autoplay) -->
+<iframe id="bgMusic" width="0" height="0" frameborder="0" allow="autoplay"></iframe>
+
+<!-- Name -->
+<div id="musicCredit">🎶 Kaptain – Cartoon Scene</div>
+
+<script>
+  document.getElementById('playMusicBtn').onclick = function() {
+    const iframe = document.getElementById('bgMusic');
+    iframe.src = "https://www.youtube.com/embed/mzNd9X857tM?autoplay=1&loop=1&playlist=mzNd9X857tM";
+    this.style.display = 'none'; // скрыть кнопку после запуска
+  };
+</script>
 
 </body>
 </html>
+
 
 
 
