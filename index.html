@@ -256,83 +256,56 @@ function updateCurrencyDisplay() {
       : `📈 increase self expo grow (+0.01) (Lvl ${exponentLevel}) — cost: ${formatNumber(exponentCost)}`;
   document.getElementById("exponentBtn").disabled = exponentLevel >= maxExponentLevel;
 }
-<!DOCTYPE html>
-<html>
-  <body>
-    <div id="currencyDisplay" style="font-size:24px; margin-bottom:20px;"></div>
+<!-- Престиж UI -->
+<div style="margin-top:40px; text-align:center;">
+  <button id="prestigeBtn" style="padding:10px 20px; font-size:18px; background-color:#4CAF50; color:white; border:none; border-radius:5px; cursor:pointer;">
+    Сделать престиж
+  </button>
+  <div id="prestigePreview" style="margin-top:10px; font-size:16px;"></div>
+</div>
 
-    <!-- Престиж UI -->
-    <div style="margin-top:40px; text-align:center;">
-      <button id="prestigeBtn" style="padding:10px 20px; font-size:18px; background-color:#4CAF50; color:white; border:none; border-radius:5px; cursor:pointer;">
-        Сделать престиж
-      </button>
-      <div id="prestigePreview" style="margin-top:10px; font-size:16px;"></div>
-    </div>
+<script>
+  function calculatePrestige(c) {
+    return Math.pow(c, 0.15) / 3 + 1;
+  }
 
-    <script>
-      let currency = 0;
+  function updatePrestigeUI() {
+    const prestigeAmount = calculatePrestige(currency);
+    const previewText = `Ты получишь: ${prestigeAmount.toFixed(2)} престижа`;
+    document.getElementById("prestigePreview").textContent = previewText;
 
-      function formatNumber(num) {
-        if (isNaN(num)) return "❌";
-        if (!isFinite(num)) return "∞";
+    const btn = document.getElementById("prestigeBtn");
+    btn.disabled = currency < 1e6;
+    btn.style.opacity = btn.disabled ? "0.5" : "1";
+  }
 
-        const absNum = Math.abs(num);
-        if (absNum > 0 && absNum < 0.001) {
-          return num.toExponential(2);
-        }
+  document.getElementById("prestigeBtn").addEventListener("click", () => {
+    if (currency >= 1e6) {
+      const gainedPrestige = calculatePrestige(currency);
+      alert(`Ты получил ${gainedPrestige.toFixed(2)} престижа!`);
+      currency = 1;
+      updateCurrencyDisplay();
+      updatePrestigeUI();
+    }
+  });
 
-        const suffixes = [
-          "", "K", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc", "No",
-          "De", "Ude", "Dde", "Tde", "Qade", "Qide", "SxDe", "SpDe", "OcDe", "NoDe"
-        ];
-
-        const tier = Math.floor(Math.log10(absNum) / 3);
-        if (tier === 0) return num.toFixed(2);
-
-        const suffix = suffixes[tier] ?? `e${tier * 3}`;
-        const scale = Math.pow(10, tier * 3);
-        const scaled = num / scale;
-
-        return scaled.toFixed(2) + suffix;
-      }
-
-      function calculatePrestige(c) {
-        return (Math.pow(c, 0.15) / 3 + 1);
-      }
-
-      function updatePrestigeUI() {
-        const prestigeAmount = calculatePrestige(currency);
-        const previewText = `Ты получишь: ${prestigeAmount.toFixed(2)} престижа`;
-        document.getElementById("prestigePreview").textContent = previewText;
-
-        const btn = document.getElementById("prestigeBtn");
-        btn.disabled = currency < 1e6;
-        btn.style.opacity = btn.disabled ? "0.5" : "1";
-      }
-
-      document.getElementById("prestigeBtn").addEventListener("click", () => {
-        if (currency >= 1e6) {
-          const gainedPrestige = calculatePrestige(currency);
-          alert(`Ты получил ${gainedPrestige.toFixed(2)} престижа!`);
-          currency = 0;
-          updatePrestigeUI();
-        }
-      });
-
-      setInterval(() => {
-        currency += Math.random() * 100000;
-        document.getElementById("currencyDisplay").textContent = formatNumber(currency);
-        updatePrestigeUI();
-      }, 500);
-    </script>
-  </body>
-</html>
-
+  // Вставим в игровой цикл
+  const originalAutoIncrement = autoIncrement;
+  autoIncrement = function() {
+    originalAutoIncrement();
+    updatePrestigeUI();
+  };
 </script>
 
+
+
+
+
 }
+  
 </body>
 </html>
+
 
 
 
