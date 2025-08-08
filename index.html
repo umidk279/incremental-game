@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="eng">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>Incrementia 1.0</title>
@@ -9,6 +9,7 @@
     #currencyDisplay { font-size: 24px; margin-bottom: 20px; }
     h1 { font-size: 32px; margin-bottom: 20px; }
     #resetStatus { font-size: 16px; color: red; margin-top: 10px; }
+    #rightPanel { position: fixed; right: 20px; top: 120px; }
 
     @keyframes blink {
       0%   { opacity: 1; }
@@ -26,282 +27,199 @@
 <body>
 
   <h1>🎮 Incrementia 1.0</h1>
+  <div id="currencyDisplay">💰 cash: 1</div>
 
-  <div id="currencyDisplay">💰 Валюта: 1</div>
-
-  <button onclick="buyMultiplier()" id="multiplierBtn">double cash — cost: 10</button>
-  <br>
-  <button onclick="buySpeedUpgrade()" id="speedBtn">speedup tickspeed (−0.02 secs) — cost: 100</button>
-  <br>
-  <button onclick="buyExponentUpgrade()" id="exponentBtn">📈 increase self expo grow (+0.01) — cost: 200</button>
-  <br>
+  <button onclick="buyMultiplier()" id="multiplierBtn">double cash — cost: 10</button><br>
+  <button onclick="buySpeedUpgrade()" id="speedBtn">speedup tickspeed — cost: 100</button><br>
+  <button onclick="buyExponentUpgrade()" id="exponentBtn">📈 increase self expo grow — cost: 200</button><br>
   <button onclick="clickToReset()">🔄 HARD RESET ALL</button>
   <div id="resetStatus"></div>
 
-  <script>
-    let currency = 1;
-    let multiplier = 1;
-    let multiplierLevel = 0;
-    let multiplierCost = 10;
-
-    let interval = 1000;
-    let speedLevel = 0;
-    let speedCost = 100;
-    const maxSpeedLevel = 45;
-
-    let exponentBase = 0.13;
-    let exponentLevel = 0;
-    let exponentCost = 200;
-    const maxExponentLevel = 5;
-
-    let resetClicks = 0;
-    const resetRequiredClicks = 10;
-
-    let autoIntervalId = null;
-
-    function updateCurrencyDisplay() {
-      document.getElementById("currencyDisplay").textContent = `💰 cash: ${Math.floor(currency)}`;
-      document.getElementById("multiplierBtn").textContent =
-        `double cash (Lvl ${multiplierLevel}) — cost: ${Math.floor(multiplierCost)}`;
-      document.getElementById("speedBtn").textContent =
-        speedLevel >= maxSpeedLevel
-          ? `Макс. ускорений (${speedLevel})`
-          : `speedup tickspeed (−0.02 secs) (Lvl ${speedLevel}) — cost: ${Math.floor(speedCost)}`;
-      document.getElementById("speedBtn").disabled = speedLevel >= maxSpeedLevel;
-
-      document.getElementById("exponentBtn").textContent =
-        exponentLevel >= maxExponentLevel
-          ? `Макс. степень (${exponentBase.toFixed(2)})`
-          : `📈 increase self expo grow (+0.01) (Lvl ${exponentLevel}) — cost: ${Math.floor(exponentCost)}`;
-      document.getElementById("exponentBtn").disabled = exponentLevel >= maxExponentLevel;
-    }
-
-    function buyMultiplier() {
-      if (currency >= multiplierCost) {
-        currency -= multiplierCost;
-        multiplier *= 2;
-        multiplierLevel++;
-        multiplierCost *= 3;
-        saveGame();
-        updateCurrencyDisplay();
-      }
-    }
-
-    function buySpeedUpgrade() {
-      if (currency >= speedCost && speedLevel < maxSpeedLevel) {
-        currency -= speedCost;
-        speedLevel++;
-        interval = Math.max(20, interval - 20);
-        speedCost *= 1.4;
-        restartAutoIncrement();
-        saveGame();
-        updateCurrencyDisplay();
-      }
-    }
-
-    function buyExponentUpgrade() {
-      if (currency >= exponentCost && exponentLevel < maxExponentLevel) {
-        currency -= exponentCost;
-        exponentLevel++;
-        exponentBase += 0.01;
-        exponentCost *= 4;
-        saveGame();
-        updateCurrencyDisplay();
-      }
-    }
-
-    function autoIncrement() {
-      let gain = Math.pow(currency, exponentBase) / 4 + 1;
-      currency += gain * multiplier;
-      saveGame();
-      updateCurrencyDisplay();
-    }
-
-    function restartAutoIncrement() {
-      if (autoIntervalId) clearInterval(autoIntervalId);
-      autoIntervalId = setInterval(autoIncrement, interval);
-    }
-
-    function saveGame() {
-      const saveData = {
-        currency,
-        multiplier,
-        multiplierLevel,
-        multiplierCost,
-        interval,
-        speedLevel,
-        speedCost,
-        exponentBase,
-        exponentLevel,
-        exponentCost,
-        resetClicks
-      };
-      localStorage.setItem("autoGameSave", JSON.stringify(saveData));
-    }
-
-    function loadGame() {
-      const saved = localStorage.getItem("autoGameSave");
-      if (saved) {
-        const data = JSON.parse(saved);
-        currency = data.currency;
-        multiplier = data.multiplier;
-        multiplierLevel = data.multiplierLevel;
-        multiplierCost = data.multiplierCost;
-        interval = data.interval;
-        speedLevel = data.speedLevel;
-        speedCost = data.speedCost;
-        exponentBase = data.exponentBase;
-        exponentLevel = data.exponentLevel;
-        exponentCost = data.exponentCost;
-        resetClicks = data.resetClicks || 0;
-      }
-    }
-
-    function clickToReset() {
-      resetClicks++;
-      const remaining = resetRequiredClicks - resetClicks;
-      const status = document.getElementById("resetStatus");
-
-      if (remaining > 0) {
-        status.textContent = ` ${remaining} `;
-        if (remaining === 1) {
-          status.classList.add("blinking");
-        } else {
-          status.classList.remove("blinking");
-        }
-        saveGame();
-      } else {
-        status.textContent = `progress lost!`;
-        status.classList.remove("blinking");
-        resetClicks = 0;
-        resetGame();
-      }
-    }
-
-    function resetGame() {
-      localStorage.removeItem("autoGameSave");
-      currency = 1;
-      multiplier = 1;
-      multiplierLevel = 0;
-      multiplierCost = 10;
-      interval = 1000;
-      speedLevel = 0;
-      speedCost = 100;
-      exponentBase = 0.13;
-      exponentLevel = 0;
-      exponentCost = 200;
-      resetClicks = 0;
-      restartAutoIncrement();
-      updateCurrencyDisplay();
-    }
-
-    window.onload = function() {
-      loadGame();
-      updateCurrencyDisplay();
-      restartAutoIncrement();
-    };
-  </script>
-<body>
-<!-- Кнопки управления -->
-<div id="musicControls" style="position:fixed; bottom:50px; right:10px; z-index:9999;">
-  <button id="playMusicBtn">▶️ turn on music</button>
-  <button id="stopMusicBtn" style="display:none;">🔇 turn off music </button>
-</div>
-
-<!-- Song -->
-<iframe id="bgMusic" width="0" height="0" frameborder="0" allow="autoplay"></iframe>
-
-<!-- Name -->
-<div id="musicCredit">🎶 Kaptain – Cartoon Scene</div>
+  <!-- 📈 +10% апгрейд справа -->
+  <div id="rightPanel">
+    <button id="upgradeTenPercentBtn">📈 +10% к валюте (Lvl 0) — cost: 10000</button>
+  </div>
 
 <script>
-  const playBtn = document.getElementById('playMusicBtn');
-  const stopBtn = document.getElementById('stopMusicBtn');
-  const musicFrame = document.getElementById('bgMusic');
+  let currency = 1;
+  let multiplier = 1;
+  let multiplierLevel = 0;
+  let multiplierCost = 10;
 
-  playBtn.onclick = function() {
-    musicFrame.src = "https://www.youtube.com/embed/mzNd9X857tM?autoplay=1&loop=1&playlist=mzNd9X857tM";
-    playBtn.style.display = 'none';
-    stopBtn.style.display = 'inline-block';
-  };
+  let interval = 1000;
+  let speedLevel = 0;
+  let speedCost = 100;
+  const maxSpeedLevel = 45;
 
-  stopBtn.onclick = function() {
-    musicFrame.src = ""; // Очищаем src, чтобы остановить музыку
-    stopBtn.style.display = 'none';
-    playBtn.style.display = 'inline-block';
-  };
-</script>
-<script>
-function formatNumber(n) {
-  if (n < 1000) return n.toString();
-  const exponent = Math.floor(Math.log10(n));
-  const mantissa = n / Math.pow(10, exponent);
-  return mantissa.toFixed(2).replace(/\.00$/, "") + "e" + exponent;
-}
+  let exponentBase = 0.13;
+  let exponentLevel = 0;
+  let exponentCost = 200;
+  const maxExponentLevel = 5;
 
-// 🔁 Обновление интерфейса с научной нотацией
-function updateCurrencyDisplay() {
-  document.getElementById("currencyDisplay").textContent = `💰 cash: ${formatNumber(currency)}`;
-  document.getElementById("multiplierBtn").textContent =
-    `double cash (Lvl ${multiplierLevel}) — cost: ${formatNumber(multiplierCost)}`;
-  document.getElementById("speedBtn").textContent =
-    speedLevel >= maxSpeedLevel
-      ? `Макс. ускорений (${speedLevel})`
-      : `speedup tickspeed (−0.02 secs) (Lvl ${speedLevel}) — cost: ${formatNumber(speedCost)}`;
-  document.getElementById("speedBtn").disabled = speedLevel >= maxSpeedLevel;
+  let resetClicks = 0;
+  const resetRequiredClicks = 10;
 
-  document.getElementById("exponentBtn").textContent =
-    exponentLevel >= maxExponentLevel
-      ? `Макс. степень (${exponentBase.toFixed(2)})`
-      : `📈 increase self expo grow (+0.01) (Lvl ${exponentLevel}) — cost: ${formatNumber(exponentCost)}`;
-  document.getElementById("exponentBtn").disabled = exponentLevel >= maxExponentLevel;
-<script>
-let autoMultiplierStep = 1;
-setInterval(() => {
-  const currentMultiplier = autoMultiplierStep * 2;
-  currency *= currentMultiplier;
-  autoMultiplierStep++;
-}, 100000);
-</script>
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Incrementia — +10% Апгрейд</title>
-  <style>
-    body { font-family: sans-serif; margin: 40px; }
-    #currencyDisplay { font-size: 24px; }
-    #controls { text-align: center; margin-top: 20px; }
-    #rightPanel { position: absolute; right: 40px; top: 100px; }
-    button { margin: 10px; padding: 10px 20px; font-size: 16px; }
-  </style>
-</head>
-<body>
+  let autoIntervalId = null;
 
-<h1>💰 Валюта: <span id="currencyDisplay">100000</span></h1>
+  let autoMultiplierStep = 1;
 
-<div id="controls">
-  <button id="gainBtn">Заработать</button>
-</div>
-
-<div id="rightPanel">
-  <button id="upgradeTenPercentBtn">📈 +10% к валюте (Lvl 0) — cost: 10000</button>
-</div>
-
-<script>
-  let currency = 100000;
   let upgradeTenPercentLevel = 0;
   let upgradeTenPercentCost = 10000;
 
-  function updateUI() {
-    document.getElementById("currencyDisplay").textContent = Math.floor(currency);
-    document.getElementById("upgradeTenPercentBtn").textContent =
-      `📈 +10% к валюте (Lvl ${upgradeTenPercentLevel}) — cost: ${upgradeTenPercentCost}`;
+  function formatNumber(n) {
+    if (n < 1000) return n.toString();
+    const exponent = Math.floor(Math.log10(n));
+    const mantissa = n / Math.pow(10, exponent);
+    return mantissa.toFixed(2).replace(/\.00$/, "") + "e" + exponent;
   }
 
-  document.getElementById("gainBtn").onclick = () => {
-    currency += 100;
-    updateUI();
-  };
+  function updateCurrencyDisplay() {
+    document.getElementById("currencyDisplay").textContent = `💰 cash: ${formatNumber(currency)}`;
+    document.getElementById("multiplierBtn").textContent =
+      `double cash (Lvl ${multiplierLevel}) — cost: ${formatNumber(multiplierCost)}`;
+    document.getElementById("speedBtn").textContent =
+      speedLevel >= maxSpeedLevel
+        ? `Макс. ускорений (${speedLevel})`
+        : `speedup tickspeed (−0.02 secs) (Lvl ${speedLevel}) — cost: ${formatNumber(speedCost)}`;
+    document.getElementById("speedBtn").disabled = speedLevel >= maxSpeedLevel;
+
+    document.getElementById("exponentBtn").textContent =
+      exponentLevel >= maxExponentLevel
+        ? `Макс. степень (${exponentBase.toFixed(2)})`
+        : `📈 increase self expo grow (+0.01) (Lvl ${exponentLevel}) — cost: ${formatNumber(exponentCost)}`;
+    document.getElementById("exponentBtn").disabled = exponentLevel >= maxExponentLevel;
+
+    document.getElementById("upgradeTenPercentBtn").textContent =
+      `📈 +10% к валюте (Lvl ${upgradeTenPercentLevel}) — cost: ${formatNumber(upgradeTenPercentCost)}`;
+  }
+
+  function buyMultiplier() {
+    if (currency >= multiplierCost) {
+      currency -= multiplierCost;
+      multiplier *= 2;
+      multiplierLevel++;
+      multiplierCost *= 3;
+      saveGame();
+      updateCurrencyDisplay();
+    }
+  }
+
+  function buySpeedUpgrade() {
+    if (currency >= speedCost && speedLevel < maxSpeedLevel) {
+      currency -= speedCost;
+      speedLevel++;
+      interval = Math.max(20, interval - 20);
+      speedCost *= 1.4;
+      restartAutoIncrement();
+      saveGame();
+      updateCurrencyDisplay();
+    }
+  }
+
+  function buyExponentUpgrade() {
+    if (currency >= exponentCost && exponentLevel < maxExponentLevel) {
+      currency -= exponentCost;
+      exponentLevel++;
+      exponentBase += 0.01;
+      exponentCost *= 4;
+      saveGame();
+      updateCurrencyDisplay();
+    }
+  }
+
+  function autoIncrement() {
+    let gain = Math.pow(currency, exponentBase) / 4 + 1;
+    currency += gain * multiplier;
+    saveGame();
+    updateCurrencyDisplay();
+  }
+
+  function restartAutoIncrement() {
+    if (autoIntervalId) clearInterval(autoIntervalId);
+    autoIntervalId = setInterval(autoIncrement, interval);
+  }
+
+  function saveGame() {
+    const saveData = {
+      currency,
+      multiplier,
+      multiplierLevel,
+      multiplierCost,
+      interval,
+      speedLevel,
+      speedCost,
+      exponentBase,
+      exponentLevel,
+      exponentCost,
+      resetClicks,
+      autoMultiplierStep,
+      upgradeTenPercentLevel,
+      upgradeTenPercentCost
+    };
+    localStorage.setItem("autoGameSave", JSON.stringify(saveData));
+  }
+
+  function loadGame() {
+    const saved = localStorage.getItem("autoGameSave");
+    if (saved) {
+      const data = JSON.parse(saved);
+      currency = data.currency;
+      multiplier = data.multiplier;
+      multiplierLevel = data.multiplierLevel;
+      multiplierCost = data.multiplierCost;
+      interval = data.interval;
+      speedLevel = data.speedLevel;
+      speedCost = data.speedCost;
+      exponentBase = data.exponentBase;
+      exponentLevel = data.exponentLevel;
+      exponentCost = data.exponentCost;
+      resetClicks = data.resetClicks || 0;
+      autoMultiplierStep = data.autoMultiplierStep || 1;
+      upgradeTenPercentLevel = data.upgradeTenPercentLevel || 0;
+      upgradeTenPercentCost = data.upgradeTenPercentCost || 10000;
+    }
+  }
+
+  function clickToReset() {
+    resetClicks++;
+    const remaining = resetRequiredClicks - resetClicks;
+    const status = document.getElementById("resetStatus");
+
+    if (remaining > 0) {
+      status.textContent = ` ${remaining} `;
+      if (remaining === 1) {
+        status.classList.add("blinking");
+      } else {
+        status.classList.remove("blinking");
+      }
+      saveGame();
+    } else {
+      status.textContent = `progress lost!`;
+      status.classList.remove("blinking");
+      resetClicks = 0;
+      resetGame();
+    }
+  }
+
+  function resetGame() {
+    localStorage.removeItem("autoGameSave");
+    currency = 1;
+    multiplier = 1;
+    multiplierLevel = 0;
+    multiplierCost = 10;
+    interval = 1000;
+    speedLevel = 0;
+    speedCost = 100;
+    exponentBase = 0.13;
+    exponentLevel = 0;
+    exponentCost = 200;
+    resetClicks = 0;
+    autoMultiplierStep = 1;
+    upgradeTenPercentLevel = 0;
+    upgradeTenPercentCost = 10000;
+    restartAutoIncrement();
+    updateCurrencyDisplay();
+  }
 
   document.getElementById("upgradeTenPercentBtn").onclick = () => {
     if (currency >= upgradeTenPercentCost) {
@@ -309,18 +227,18 @@ setInterval(() => {
       currency *= 1.1;
       upgradeTenPercentLevel++;
       upgradeTenPercentCost = Math.floor(upgradeTenPercentCost * 1.25);
-      updateUI();
+      saveGame();
+      updateCurrencyDisplay();
     }
   };
 
-  updateUI();
-</script>
+  setInterval(() => {
+    const currentMultiplier = autoMultiplierStep * 2;
+    currency *= currentMultiplier;
+    autoMultiplierStep++;
+    saveGame();
+    updateCurrencyDisplay();
 
-</body>
-</html>
-
-</body>
-</html>
 
 
 
