@@ -287,6 +287,20 @@ function updateCurrencyDisplay() {
       alert(`Ты получил ${gainedPrestige.toFixed(2)} престижа!`);
       currency = 1;
       updateCurrencyDisplay();
+      <!-- перед </body> -->
+<div style="margin-top:40px; text-align:center;">
+  <button id="prestigeBtn">Сделать престиж</button>
+  <div id="prestigePreview"></div>
+  <div id="prestigeTotal"></div>
+</div>
+
+<script>
+  let prestigePoints = 0;
+  // ...весь скрипт...
+</script>
+</body>
+</html>
+
       updatePrestigeUI();
     }
   });
@@ -300,6 +314,7 @@ function updateCurrencyDisplay() {
 
 </body>
 </html>
+
 
 
 
