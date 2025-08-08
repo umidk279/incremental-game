@@ -256,40 +256,29 @@ function updateCurrencyDisplay() {
       : `📈 increase self expo grow (+0.01) (Lvl ${exponentLevel}) — cost: ${formatNumber(exponentCost)}`;
   document.getElementById("exponentBtn").disabled = exponentLevel >= maxExponentLevel;
 <div style="margin-top:40px; text-align:center;">
-<!-- Престиж UI -->
-<div style="margin-top:40px; text-align:center;">
   <button id="prestigeBtn">Сделать престиж</button>
   <div id="prestigePreview"></div>
   <div id="prestigeTotal"></div>
-
-  <hr style="margin:20px 0;">
-  <div>
-    <button id="prestigeUpgrade1">🔼 Бонус к множителю — cost: 5</button>
-    <button id="prestigeUpgrade2">⚡ Ускорение авто — cost: 10</button>
-  </div>
+  <button id="prestigeUpgrade1">💥 Удвоить доход — cost: 5</button>
 </div>
 
 <script>
   let prestigePoints = 0;
   let prestigeUpgrade1Level = 0;
-  let prestigeUpgrade2Level = 0;
+  let prestigeUpgrade1Cost = 5;
 
   function calculatePrestige(c) {
     return Math.pow(c, 0.15) / 3 + 1;
   }
 
   function updatePrestigeUI() {
-    const prestigeAmount = calculatePrestige(currency);
-    document.getElementById("prestigePreview").textContent = `Ты получишь: ${prestigeAmount.toFixed(2)} престижа`;
-    document.getElementById("prestigeTotal").textContent = `🔮 Всего престижа: ${prestigePoints.toFixed(2)}`;
-
+    document.getElementById("prestigePreview").textContent =
+      `Ты получишь: ${calculatePrestige(currency).toFixed(2)} престижа`;
+    document.getElementById("prestigeTotal").textContent =
+      `🔮 Всего престижа: ${prestigePoints.toFixed(2)}`;
     document.getElementById("prestigeBtn").disabled = currency < 1e6;
-    document.getElementById("prestigeBtn").style.opacity = currency < 1e6 ? "0.5" : "1";
-
     document.getElementById("prestigeUpgrade1").textContent =
-      `🔼 Бонус к множителю (Lvl ${prestigeUpgrade1Level}) — cost: 5`;
-    document.getElementById("prestigeUpgrade2").textContent =
-      `⚡ Ускорение авто (Lvl ${prestigeUpgrade2Level}) — cost: 10`;
+      `💥 Удвоить доход (Lvl ${prestigeUpgrade1Level}) — cost: ${prestigeUpgrade1Cost}`;
   }
 
   document.getElementById("prestigeBtn").addEventListener("click", () => {
@@ -304,22 +293,12 @@ function updateCurrencyDisplay() {
   });
 
   document.getElementById("prestigeUpgrade1").addEventListener("click", () => {
-    if (prestigePoints >= 5) {
-      prestigePoints -= 5;
+    if (prestigePoints >= prestigeUpgrade1Cost) {
+      prestigePoints -= prestigeUpgrade1Cost;
       prestigeUpgrade1Level++;
-      multiplier *= 1.25;
+      prestigeUpgrade1Cost *= 4;
+      multiplier *= 2;
       updateCurrencyDisplay();
-      updatePrestigeUI();
-      saveGame();
-    }
-  });
-
-  document.getElementById("prestigeUpgrade2").addEventListener("click", () => {
-    if (prestigePoints >= 10) {
-      prestigePoints -= 10;
-      prestigeUpgrade2Level++;
-      interval = Math.max(20, interval - 50);
-      restartAutoIncrement();
       updatePrestigeUI();
       saveGame();
     }
@@ -337,7 +316,7 @@ function updateCurrencyDisplay() {
     const prestigeData = {
       prestigePoints,
       prestigeUpgrade1Level,
-      prestigeUpgrade2Level
+      prestigeUpgrade1Cost
     };
     localStorage.setItem("prestigeSave", JSON.stringify(prestigeData));
   };
@@ -350,15 +329,15 @@ function updateCurrencyDisplay() {
       const data = JSON.parse(saved);
       prestigePoints = data.prestigePoints || 0;
       prestigeUpgrade1Level = data.prestigeUpgrade1Level || 0;
-      prestigeUpgrade2Level = data.prestigeUpgrade2Level || 0;
-      multiplier *= Math.pow(1.25, prestigeUpgrade1Level);
-      interval = Math.max(20, interval - 50 * prestigeUpgrade2Level);
+      prestigeUpgrade1Cost = data.prestigeUpgrade1Cost || 5;
+      multiplier *= Math.pow(2, prestigeUpgrade1Level);
     }
   };
 </script>
-  
+
 </body>
 </html>
+
 
 
 
