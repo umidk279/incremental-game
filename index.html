@@ -242,20 +242,27 @@
   }
 
   // 🔁 Обновление интерфейса
-  function updateUI() {
-    const moneyDisplay = document.getElementById("currencyDisplay");
-    const speedDisplay = document.getElementById("speedDisplay");
+  function updateCurrencyDisplay() {
+    document.getElementById("currencyDisplay").textContent = `💰 cash: ${formatNumber(currency)}`;
+    document.getElementById("multiplierBtn").textContent =
+      `double cash (Lvl ${multiplierLevel}) — cost: ${formatNumber(multiplierCost)}`;
+    document.getElementById("speedBtn").textContent =
+      speedLevel >= maxSpeedLevel
+        ? `Макс. ускорений (${speedLevel})`
+        : `speedup tickspeed (−0.02 secs) (Lvl ${speedLevel}) — cost: ${formatNumber(speedCost)}`;
+    document.getElementById("speedBtn").disabled = speedLevel >= maxSpeedLevel;
 
-    if (moneyDisplay) moneyDisplay.textContent = formatNumber(playerMoney);
-    if (speedDisplay) speedDisplay.textContent = formatNumber(currentSpeed);
+    document.getElementById("exponentBtn").textContent =
+      exponentLevel >= maxExponentLevel
+        ? `Макс. степень (${exponentBase.toFixed(2)})`
+        : `📈 increase self expo grow (+0.01) (Lvl ${exponentLevel}) — cost: ${formatNumber(exponentCost)}`;
+    document.getElementById("exponentBtn").disabled = exponentLevel >= maxExponentLevel;
   }
-
-  // ⏱ Цикл обновления каждые 100 мс
-  setInterval(updateUI, 100);
 </script>
   
 </body>
 </html>
+
 
 
 
