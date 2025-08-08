@@ -2,272 +2,122 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Incrementia 1.0</title>
+  <title>Incrementia — Без багов, с авто-доходом</title>
   <style>
-    body { font-family: sans-serif; text-align: center; margin-top: 50px; }
-    button { padding: 10px 20px; font-size: 16px; margin: 10px; }
-    #currencyDisplay { font-size: 24px; margin-bottom: 20px; }
+    body { font-family: sans-serif; text-align: center; margin-top: 40px; }
+    button { margin: 10px; padding: 10px 20px; font-size: 16px; }
+    #currencyDisplay, #stats { font-size: 20px; margin-bottom: 10px; }
     h1 { font-size: 32px; margin-bottom: 20px; }
-    #resetStatus { font-size: 16px; color: red; margin-top: 10px; }
-    #rightPanel { position: fixed; right: 20px; top: 120px; }
-
-    @keyframes blink {
-      0%   { opacity: 1; }
-      50%  { opacity: 0; }
-      100% { opacity: 1; }
-    }
-
-    .blinking {
-      animation: blink 0.6s infinite;
-      font-weight: bold;
-      color: crimson;
-    }
   </style>
 </head>
 <body>
 
-  <h1>🎮 Incrementia 1.0</h1>
-  <div id="currencyDisplay">💰 cash: 1</div>
+<h1>🎮 Incrementia — Без багов, с авто-доходом</h1>
+<div id="currencyDisplay">💰 Валюта: 0</div>
+<div id="stats">📈 Доход: 1 / тик | ⏱️ Скорость: 1.00 сек</div>
 
-  <button onclick="buyMultiplier()" id="multiplierBtn">double cash — cost: 10</button><br>
-  <button onclick="buySpeedUpgrade()" id="speedBtn">speedup tickspeed — cost: 100</button><br>
-  <button onclick="buyExponentUpgrade()" id="exponentBtn">📈 increase self expo grow — cost: 200</button><br>
-  <button onclick="clickToReset()">🔄 HARD RESET ALL</button>
-  <div id="resetStatus"></div>
-
-  <!-- 📈 +10% апгрейд справа -->
-  <div id="rightPanel">
-    <button id="upgradeTenPercentBtn">📈 +10% к валюте (Lvl 0) — cost: 10000</button>
-  </div>
+<button id="upgrade1Btn">×2 доход (Lvl 0) — cost: 10</button><br>
+<button id="upgrade2Btn">⏱️ ускорение (Lvl 0/45) — cost: 100</button><br>
+<button id="upgrade3Btn">×10 к валюте (Lvl 0) — cost: 1000</button><br>
+<button id="upgrade4Btn">📈 формула boost — cost: 10000</button>
 
 <script>
-  let currency = 1;
-  let multiplier = 1;
-  let multiplierLevel = 0;
-  let multiplierCost = 10;
-
+  let currency = 0;
+  let gainPerTick = 1;
   let interval = 1000;
-  let speedLevel = 0;
-  let speedCost = 100;
-  const maxSpeedLevel = 45;
-
-  let exponentBase = 0.13;
-  let exponentLevel = 0;
-  let exponentCost = 200;
-  const maxExponentLevel = 5;
-
-  let resetClicks = 0;
-  const resetRequiredClicks = 10;
-
   let autoIntervalId = null;
 
-  let autoMultiplierStep = 1;
+  let upgrade1Level = 0;
+  let upgrade1Cost = 10;
 
-  let upgradeTenPercentLevel = 0;
-  let upgradeTenPercentCost = 10000;
+  let upgrade2Level = 0;
+  let upgrade2Cost = 100;
+  const maxUpgrade2 = 45;
 
-  function formatNumber(n) {
-    if (n < 1000) return n.toString();
-    const exponent = Math.floor(Math.log10(n));
-    const mantissa = n / Math.pow(10, exponent);
-    return mantissa.toFixed(2).replace(/\.00$/, "") + "e" + exponent;
+  let upgrade3Level = 0;
+  let upgrade3Cost = 1000;
+
+  let upgrade4Used = false;
+
+  function updateUI() {
+    document.getElementById("currencyDisplay").textContent = `💰 Валюта: ${Math.floor(currency)}`;
+    document.getElementById("stats").textContent =
+      `📈 Доход: ${gainPerTick} / тик | ⏱️ Скорость: ${(interval / 1000).toFixed(2)} сек`;
+
+    document.getElementById("upgrade1Btn").textContent =
+      `×2 доход (Lvl ${upgrade1Level}) — cost: ${Math.floor(upgrade1Cost)}`;
+    document.getElementById("upgrade2Btn").textContent =
+      upgrade2Level >= maxUpgrade2
+        ? `⏱️ ускорение (макс ${maxUpgrade2})`
+        : `⏱️ ускорение (Lvl ${upgrade2Level}/${maxUpgrade2}) — cost: ${Math.floor(upgrade2Cost)}`;
+    document.getElementById("upgrade2Btn").disabled = upgrade2Level >= maxUpgrade2;
+    document.getElementById("upgrade3Btn").textContent =
+      `×10 к валюте (Lvl ${upgrade3Level}) — cost: ${Math.floor(upgrade3Cost)}`;
+    document.getElementById("upgrade4Btn").disabled = upgrade4Used;
   }
 
-  function updateCurrencyDisplay() {
-    document.getElementById("currencyDisplay").textContent = `💰 cash: ${formatNumber(currency)}`;
-    document.getElementById("multiplierBtn").textContent =
-      `double cash (Lvl ${multiplierLevel}) — cost: ${formatNumber(multiplierCost)}`;
-    document.getElementById("speedBtn").textContent =
-      speedLevel >= maxSpeedLevel
-        ? `Макс. ускорений (${speedLevel})`
-        : `speedup tickspeed (−0.02 secs) (Lvl ${speedLevel}) — cost: ${formatNumber(speedCost)}`;
-    document.getElementById("speedBtn").disabled = speedLevel >= maxSpeedLevel;
-
-    document.getElementById("exponentBtn").textContent =
-      exponentLevel >= maxExponentLevel
-        ? `Макс. степень (${exponentBase.toFixed(2)})`
-        : `📈 increase self expo grow (+0.01) (Lvl ${exponentLevel}) — cost: ${formatNumber(exponentCost)}`;
-    document.getElementById("exponentBtn").disabled = exponentLevel >= maxExponentLevel;
-
-    document.getElementById("upgradeTenPercentBtn").textContent =
-      `📈 +10% к валюте (Lvl ${upgradeTenPercentLevel}) — cost: ${formatNumber(upgradeTenPercentCost)}`;
+  function autoGain() {
+    currency += gainPerTick;
+    updateUI();
   }
 
-  function buyMultiplier() {
-    if (currency >= multiplierCost) {
-      currency -= multiplierCost;
-      multiplier *= 2;
-      multiplierLevel++;
-      multiplierCost *= 3;
-      saveGame();
-      updateCurrencyDisplay();
-    }
-  }
-
-  function buySpeedUpgrade() {
-    if (currency >= speedCost && speedLevel < maxSpeedLevel) {
-      currency -= speedCost;
-      speedLevel++;
-      interval = Math.max(20, interval - 20);
-      speedCost *= 1.4;
-      restartAutoIncrement();
-      saveGame();
-      updateCurrencyDisplay();
-    }
-  }
-
-  function buyExponentUpgrade() {
-    if (currency >= exponentCost && exponentLevel < maxExponentLevel) {
-      currency -= exponentCost;
-      exponentLevel++;
-      exponentBase += 0.01;
-      exponentCost *= 4;
-      saveGame();
-      updateCurrencyDisplay();
-    }
-  }
-
-  function autoIncrement() {
-    let gain = Math.pow(currency, exponentBase) / 4 + 1;
-    currency += gain * multiplier;
-    saveGame();
-    updateCurrencyDisplay();
-  }
-
-  function restartAutoIncrement() {
+  function restartAutoGain() {
     if (autoIntervalId) clearInterval(autoIntervalId);
-    autoIntervalId = setInterval(autoIncrement, interval);
+    autoIntervalId = setInterval(autoGain, interval);
   }
 
-  function saveGame() {
-    const saveData = {
-      currency,
-      multiplier,
-      multiplierLevel,
-      multiplierCost,
-      interval,
-      speedLevel,
-      speedCost,
-      exponentBase,
-      exponentLevel,
-      exponentCost,
-      resetClicks,
-      autoMultiplierStep,
-      upgradeTenPercentLevel,
-      upgradeTenPercentCost
-    };
-    localStorage.setItem("autoGameSave", JSON.stringify(saveData));
-  }
-
-  function loadGame() {
-    const saved = localStorage.getItem("autoGameSave");
-    if (saved) {
-      const data = JSON.parse(saved);
-      currency = data.currency;
-      multiplier = data.multiplier;
-      multiplierLevel = data.multiplierLevel;
-      multiplierCost = data.multiplierCost;
-      interval = data.interval;
-      speedLevel = data.speedLevel;
-      speedCost = data.speedCost;
-      exponentBase = data.exponentBase;
-      exponentLevel = data.exponentLevel;
-      exponentCost = data.exponentCost;
-      resetClicks = data.resetClicks || 0;
-      autoMultiplierStep = data.autoMultiplierStep || 1;
-      upgradeTenPercentLevel = data.upgradeTenPercentLevel || 0;
-      upgradeTenPercentCost = data.upgradeTenPercentCost || 10000;
-    }
-  }
-
-  function clickToReset() {
-    resetClicks++;
-    const remaining = resetRequiredClicks - resetClicks;
-    const status = document.getElementById("resetStatus");
-
-    if (remaining > 0) {
-      status.textContent = ` ${remaining} `;
-      if (remaining === 1) {
-        status.classList.add("blinking");
-      } else {
-        status.classList.remove("blinking");
-      }
-      saveGame();
-    } else {
-      status.textContent = `progress lost!`;
-      status.classList.remove("blinking");
-      resetClicks = 0;
-      resetGame();
-    }
-  }
-
-  function resetGame() {
-    localStorage.removeItem("autoGameSave");
-    currency = 1;
-    multiplier = 1;
-    multiplierLevel = 0;
-    multiplierCost = 10;
-    interval = 1000;
-    speedLevel = 0;
-    speedCost = 100;
-    exponentBase = 0.13;
-    exponentLevel = 0;
-    exponentCost = 200;
-    resetClicks = 0;
-    autoMultiplierStep = 1;
-    upgradeTenPercentLevel = 0;
-    upgradeTenPercentCost = 10000;
-    restartAutoIncrement();
-    updateCurrencyDisplay();
-  }
-
-  document.getElementById("upgradeTenPercentBtn").onclick = () => {
-    if (currency >= upgradeTenPercentCost) {
-      currency -= upgradeTenPercentCost;
-      currency *= 1.1;
-      upgradeTenPercentLevel++;
-      upgradeTenPercentCost = Math.floor(upgradeTenPercentCost * 1.25);
-      saveGame();
-      updateCurrencyDisplay();
+  // Апгрейд 1 — увеличивает доход
+  document.getElementById("upgrade1Btn").onclick = () => {
+    if (currency >= upgrade1Cost) {
+      currency -= upgrade1Cost;
+      gainPerTick *= 2;
+      upgrade1Level++;
+      upgrade1Cost *= 3;
+      updateUI();
     }
   };
 
-  setInterval(() => {
-    const currentMultiplier = autoMultiplierStep * 2;
-    currency *= currentMultiplier;
-    autoMultiplierStep++;
-    saveGame();
-    updateCurrencyDisplay();
+  // Апгрейд 2 — ускоряет таймер
+  document.getElementById("upgrade2Btn").onclick = () => {
+    if (currency >= upgrade2Cost && upgrade2Level < maxUpgrade2) {
+      currency -= upgrade2Cost;
+      upgrade2Level++;
+      upgrade2Cost *= 1.4;
+      interval = Math.max(20, interval - 20);
+      restartAutoGain(); // перезапускаем таймер с новым интервалом
+      updateUI();
+    }
+  };
 
+  // Апгрейд 3 — умножает валюту
+  document.getElementById("upgrade3Btn").onclick = () => {
+    if (currency >= upgrade3Cost) {
+      currency -= upgrade3Cost;
+      currency *= 10;
+      upgrade3Level++;
+      upgrade3Cost *= 100;
+      updateUI();
+    }
+  };
 
+  // Апгрейд 4 — формула boost
+  document.getElementById("upgrade4Btn").onclick = () => {
+    if (!upgrade4Used && currency >= 10000) {
+      currency -= 10000;
+      const boost = Math.pow(currency, 0.15) / 5 + 1;
+      currency *= boost;
+      upgrade4Used = true;
+      updateUI();
+    }
+  };
 
+  // Запуск
+  restartAutoGain();
+  updateUI();
+</script>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+</body>
+</html>
 
 
 
