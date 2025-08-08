@@ -202,25 +202,39 @@
     };
   </script>
 <body>
-<!-- Кнопка запуска -->
-<button id="playMusicBtn" style="position:fixed; bottom:50px; right:10px; z-index:9999;">▶️ turn on music</button>
+<!-- Кнопки управления -->
+<div id="musicControls" style="position:fixed; bottom:50px; right:10px; z-index:9999;">
+  <button id="playMusicBtn">▶️ Включить музыку</button>
+  <button id="stopMusicBtn" style="display:none;">🔇 Выключить музыку</button>
+</div>
 
-<!-- music (from start without autoplay) -->
+<!-- Музыка -->
 <iframe id="bgMusic" width="0" height="0" frameborder="0" allow="autoplay"></iframe>
 
-<!-- Name -->
+<!-- Подпись -->
 <div id="musicCredit">🎶 Kaptain – Cartoon Scene</div>
 
 <script>
-  document.getElementById('playMusicBtn').onclick = function() {
-    const iframe = document.getElementById('bgMusic');
-    iframe.src = "https://www.youtube.com/embed/mzNd9X857tM?autoplay=1&loop=1&playlist=mzNd9X857tM";
-    this.style.display = 'none'; // скрыть кнопку после запуска
+  const playBtn = document.getElementById('playMusicBtn');
+  const stopBtn = document.getElementById('stopMusicBtn');
+  const musicFrame = document.getElementById('bgMusic');
+
+  playBtn.onclick = function() {
+    musicFrame.src = "https://www.youtube.com/embed/mzNd9X857tM?autoplay=1&loop=1&playlist=mzNd9X857tM";
+    playBtn.style.display = 'none';
+    stopBtn.style.display = 'inline-block';
+  };
+
+  stopBtn.onclick = function() {
+    musicFrame.src = ""; // Очищаем src, чтобы остановить музыку
+    stopBtn.style.display = 'none';
+    playBtn.style.display = 'inline-block';
   };
 </script>
 
 </body>
 </html>
+
 
 
 
