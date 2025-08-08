@@ -256,9 +256,27 @@ function updateCurrencyDisplay() {
       : `📈 increase self expo grow (+0.01) (Lvl ${exponentLevel}) — cost: ${formatNumber(exponentCost)}`;
   document.getElementById("exponentBtn").disabled = exponentLevel >= maxExponentLevel;
 }
+function formatNumber(num) {
+  if (isNaN(num)) return "❌";
 
+  const suffixes = [
+    "", "K", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc", "No",
+    "De", "Ude", "Dde", "Tde", "Qade", "Qide", "SxDe", "SpDe", "OcDe", "NoDe"
+  ];
+
+  let tier = Math.floor(Math.log10(Math.abs(num)) / 3);
+  if (tier === 0) return num.toString();
+
+  const suffix = suffixes[tier] || `e${tier * 3}`;
+  const scale = Math.pow(10, tier * 3);
+  const scaled = num / scale;
+
+  return scaled.toFixed(3) + suffix;
+}
+  
 </body>
 </html>
+
 
 
 
