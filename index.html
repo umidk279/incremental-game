@@ -232,6 +232,8 @@
   };
 </script>
 <script>
+<script>
+  // 🎓 Форматирование чисел в научной нотации
   function formatNumber(n) {
     if (n < 1000) return n.toString();
     const exponent = Math.floor(Math.log10(n));
@@ -239,19 +241,22 @@
     return mantissa.toFixed(2).replace(/\.00$/, "") + "e" + exponent;
   }
 
+  // 🔁 Обновление интерфейса
   function updateUI() {
     const moneyDisplay = document.getElementById("currencyDisplay");
     const speedDisplay = document.getElementById("speedDisplay");
 
-    moneyDisplay.textContent = formatNumber(playerMoney);
-    speedDisplay.textContent = formatNumber(currentSpeed);
+    if (moneyDisplay) moneyDisplay.textContent = formatNumber(playerMoney);
+    if (speedDisplay) speedDisplay.textContent = formatNumber(currentSpeed);
   }
 
-  setInterval(updateUI, 100); // обновление каждые 100 мс
+  // ⏱ Цикл обновления каждые 100 мс
+  setInterval(updateUI, 100);
 </script>
-
+  
 </body>
 </html>
+
 
 
 
