@@ -260,9 +260,12 @@ function updateCurrencyDisplay() {
     Сделать престиж
   </button>
   <div id="prestigePreview" style="margin-top:10px; font-size:16px;"></div>
+  <div id="prestigeTotal" style="margin-top:10px; font-size:18px; color:#2E8B57;"></div>
 </div>
 
 <script>
+  let prestigePoints = 0;
+
   function calculatePrestige(c) {
     return Math.pow(c, 0.15) / 3 + 1;
   }
@@ -270,6 +273,8 @@ function updateCurrencyDisplay() {
   function updatePrestigeUI() {
     const prestigeAmount = calculatePrestige(currency);
     document.getElementById("prestigePreview").textContent = `Ты получишь: ${prestigeAmount.toFixed(2)} престижа`;
+    document.getElementById("prestigeTotal").textContent = `🔮 Всего престижа: ${prestigePoints.toFixed(2)}`;
+
     const btn = document.getElementById("prestigeBtn");
     btn.disabled = currency < 1e6;
     btn.style.opacity = btn.disabled ? "0.5" : "1";
@@ -278,6 +283,7 @@ function updateCurrencyDisplay() {
   document.getElementById("prestigeBtn").addEventListener("click", () => {
     if (currency >= 1e6) {
       const gainedPrestige = calculatePrestige(currency);
+      prestigePoints += gainedPrestige;
       alert(`Ты получил ${gainedPrestige.toFixed(2)} престижа!`);
       currency = 1;
       updateCurrencyDisplay();
@@ -294,6 +300,7 @@ function updateCurrencyDisplay() {
 
 </body>
 </html>
+
 
 
 
