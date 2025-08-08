@@ -275,17 +275,19 @@ function formatNumber(num) {
 
   if (tier === 0) return num.toFixed(3); // Показываем до тысячных
 
-  const suffix = suffixes[tier] || `e${tier * 3}`;
+  const suffix = suffixes[tier] ?? `e${tier * 3}`;
   const scale = Math.pow(10, tier * 3);
   const scaled = num / scale;
 
   return scaled.toFixed(3) + suffix;
 }
 
+
 }
   
 </body>
 </html>
+
 
 
 
