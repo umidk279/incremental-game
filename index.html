@@ -263,9 +263,65 @@ setInterval(() => {
   autoMultiplierStep++;
 }, 100000);
 </script>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Incrementia — +10% Апгрейд</title>
+  <style>
+    body { font-family: sans-serif; margin: 40px; }
+    #currencyDisplay { font-size: 24px; }
+    #controls { text-align: center; margin-top: 20px; }
+    #rightPanel { position: absolute; right: 40px; top: 100px; }
+    button { margin: 10px; padding: 10px 20px; font-size: 16px; }
+  </style>
+</head>
+<body>
+
+<h1>💰 Валюта: <span id="currencyDisplay">100000</span></h1>
+
+<div id="controls">
+  <button id="gainBtn">Заработать</button>
+</div>
+
+<div id="rightPanel">
+  <button id="upgradeTenPercentBtn">📈 +10% к валюте (Lvl 0) — cost: 10000</button>
+</div>
+
+<script>
+  let currency = 100000;
+  let upgradeTenPercentLevel = 0;
+  let upgradeTenPercentCost = 10000;
+
+  function updateUI() {
+    document.getElementById("currencyDisplay").textContent = Math.floor(currency);
+    document.getElementById("upgradeTenPercentBtn").textContent =
+      `📈 +10% к валюте (Lvl ${upgradeTenPercentLevel}) — cost: ${upgradeTenPercentCost}`;
+  }
+
+  document.getElementById("gainBtn").onclick = () => {
+    currency += 100;
+    updateUI();
+  };
+
+  document.getElementById("upgradeTenPercentBtn").onclick = () => {
+    if (currency >= upgradeTenPercentCost) {
+      currency -= upgradeTenPercentCost;
+      currency *= 1.1;
+      upgradeTenPercentLevel++;
+      upgradeTenPercentCost = Math.floor(upgradeTenPercentCost * 1.25);
+      updateUI();
+    }
+  };
+
+  updateUI();
+</script>
 
 </body>
 </html>
+
+</body>
+</html>
+
 
 
 
