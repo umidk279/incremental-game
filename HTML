@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nexus Ascension</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<!-- Background particle canvas -->
+<canvas id="bg-canvas"></canvas>
+
+<!-- ===== HEADER ===== -->
+<header id="header">
+  <div id="header-left">
+    <h1 id="game-title">NEXUS ASCENSION</h1>
+    <span id="header-time" class="header-stat"><i class="fa-solid fa-clock"></i> <span id="total-time">0:00:00</span></span>
+  </div>
+  <div id="header-center">
+    <div id="points-display">
+      <span id="points-amount" class="currency-amount points-color">0</span>
+      <span id="points-label" class="currency-label">Points</span>
+    </div>
+    <div id="points-rate">
+      <i class="fa-solid fa-bolt"></i> <span id="points-per-sec">0</span>/s
+      <span id="mult-display" class="mult-badge">x1.00</span>
+    </div>
+  </div>
+  <div id="header-right">
+    <button id="btn-save" class="header-btn" title="Save Game"><i class="fa-solid fa-floppy-disk"></i></button>
+    <button id="btn-settings" class="header-btn" title="Settings"><i class="fa-solid fa-gear"></i></button>
+  </div>
+</header>
+
+<!-- ===== TAB BAR ===== -->
+<nav id="tab-bar">
+  <button class="tab-btn active" data-tab="points" style="--tab-color:var(--points)">
+    <i class="fa-solid fa-circle-dot"></i> <span class="tab-label">Points</span>
+  </button>
+  <button class="tab-btn" data-tab="boosters" style="--tab-color:var(--boosters)">
+    <i class="fa-solid fa-arrow-up"></i> <span class="tab-label">Boosters</span>
+  </button>
+  <button class="tab-btn" data-tab="prestige" style="--tab-color:var(--prestige)">
+    <i class="fa-solid fa-star"></i> <span class="tab-label">Prestige</span>
+  </button>
+  <button class="tab-btn" data-tab="timecubes" style="--tab-color:var(--timecubes)">
+    <i class="fa-solid fa-cube"></i> <span class="tab-label">Time Cubes</span>
+  </button>
+  <button class="tab-btn" data-tab="eternity" style="--tab-color:var(--eternity)">
+    <i class="fa-solid fa-infinity"></i> <span class="tab-label">Eternity</span>
+  </button>
+  <button class="tab-btn" data-tab="fragments" style="--tab-color:var(--fragments)">
+    <i class="fa-solid fa-gem"></i> <span class="tab-label">Fragments</span>
+  </button>
+  <button class="tab-btn" data-tab="quantum" style="--tab-color:var(--quantum)">
+    <i class="fa-solid fa-atom"></i> <span class="tab-label">Quantum</span>
+  </button>
+  <button class="tab-btn" data-tab="singularity" style="--tab-color:var(--singularity)">
+    <i class="fa-solid fa-sun"></i> <span class="tab-label">Singularity</span>
+  </button>
+</nav>
+
+<!-- ===== MAIN CONTENT ===== -->
+<main id="main-content">
+
+  <!-- Sidebar: All currencies overview -->
+  <aside id="sidebar">
+    <h2 class="sidebar-title">Currencies</h2>
+    <div id="currency-list">
+      <div class="currency-row" data-currency="points">
+        <span class="currency-dot" style="background:var(--points)"></span>
+        <span class="currency-name">Points</span>
+        <span class="currency-val points-color" id="side-points">0</span>
+      </div>
+      <div class="currency-row" data-currency="boosters">
+        <span class="currency-dot" style="background:var(--boosters)"></span>
+        <span class="currency-name">Boosters</span>
+        <span class="currency-val boosters-color" id="side-boosters">0</span>
+      </div>
+      <div class="currency-row" data-currency="prestige">
+        <span class="currency-dot" style="background:var(--prestige)"></span>
+        <span class="currency-name">Prestige</span>
+        <span class="currency-val prestige-color" id="side-prestige">0</span>
+      </div>
+      <div class="currency-row" data-currency="timecubes">
+        <span class="currency-dot" style="background:var(--timecubes)"></span>
+        <span class="currency-name">Time Cubes</span>
+        <span class="currency-val timecubes-color" id="side-timecubes">0</span>
+      </div>
+      <div class="currency-row" data-currency="eternity">
+        <span class="currency-dot" style="background:var(--eternity)"></span>
+        <span class="currency-name">Eternity</span>
+        <span class="currency-val eternity-color" id="side-eternity">0</span>
+      </div>
+      <div class="currency-row" data-currency="fragments">
+        <span class="currency-dot" style="background:var(--fragments)"></span>
+        <span class="currency-name">Fragments</span>
+        <span class="currency-val fragments-color" id="side-fragments">0</span>
+      </div>
+      <div class="currency-row" data-currency="quantum">
+        <span class="currency-dot" style="background:var(--quantum)"></span>
+        <span class="currency-name">Quantum</span>
+        <span class="currency-val quantum-color" id="side-quantum">0</span>
+      </div>
+      <div class="currency-row" data-currency="singularity">
+        <span class="currency-dot" style="background:var(--singularity)"></span>
+        <span class="currency-name">Singularity</span>
+        <span class="currency-val singularity-color" id="side-singularity">0</span>
+      </div>
+    </div>
+
+    <h2 class="sidebar-title" style="margin-top:16px">Multipliers</h2>
+    <div id="mult-list">
+      <div class="mult-row">
+        <span class="mult-name">Base Gain</span>
+        <span class="mult-val" id="mult-base">1</span>
+      </div>
+      <div class="mult-row">
+        <span class="mult-name">Flat Mult</span>
+        <span class="mult-val" id="mult-flat">x1</span>
+      </div>
+      <div class="mult-row">
+        <span class="mult-name">Exponent</span>
+        <span class="mult-val" id="mult-exp">^1</span>
+      </div>
+      <div class="mult-row">
+        <span class="mult-name">Total</span>
+        <span class="mult-val total" id="mult-total">1/s</span>
+      </div>
+    </div>
+
+    <h2 class="sidebar-title" style="margin-top:16px">Milestones</h2>
+    <div id="milestone-list">
+      <!-- Dynamically filled -->
+    </div>
+  </aside>
+
+  <!-- Tab Content Area -->
+  <section id="tab-content">
+
+    <!-- ====== POINTS TAB ====== -->
+    <div class="tab-panel active" id="panel-points">
+      <div class="panel-header">
+        <div class="panel-currency-display">
+          <span class="panel-amount points-color" id="panel-points-amount">0</span>
+          <span class="panel-label">Points</span>
+        </div>
+        <div class="panel-rate">Gaining <span id="panel-points-rate">0</span>/s</div>
+      </div>
+      <div class="upgrades-grid" id="upgrades-points">
+        <div class="upgrade-card repeatable" data-upgrade="p1">
+          <div class="upgrade-icon"><i class="fa-solid fa-plus"></i></div>
+          <div class="upgrade-info">
+            <h3 class="upgrade-name">Point Amplifier</h3>
+            <p class="upgrade-desc">+1 base Points/s per level</p>
+            <p class="upgrade-effect">Current: +<span class="eff-val">0</span></p>
+          </div>
+          <div class="upgrade-buy">
+            <button class="buy-btn points-bg" data-upgrade="p1">Cost: <span class="cost-val">10</span></button>
+            <span class="level-display">Lv <span class="lvl-val">0</span></span>
+          </div>
+        </div>
+        <div class="upgrade-card repeatable" data-upgrade="p2">
+          <div class="upgrade-icon"><i class="fa-solid fa-xmark"></i></div>
+          <div class="upgrade-info">
+            <h3 class="upgrade-name">Point Multiplier</h3>
+            <p class="upgrade-desc">x2 Points gain per level</p>
+            <p class="upgrade-effect">Current: x<span class="eff-val">1</span></p>
+          </div>
+          <div class="upgrade-buy">
+            <button class="buy-btn points-bg" data-upgrade="p2">Cost: <span class="cost-val">100</span></button>
+            <span class="level-display">Lv <span class="lvl-val">0</span></span>
+          </div>
+        </div>
+        <div class="upgrade-card repeatable" data-upgrade="p3">
+          <div class="upgrade-icon"><i class="fa-solid fa-forward"></i></div>
+          <div class="upgrade-info">
+            <h3 class="upgrade-name">Accelerator</h3>
+            <p class="upgrade-desc">x2.5 Points gain per level</p>
+            <p class="upgrade-effect">Current: x<span class="eff-val">1</span></p>
+          </div>
+          <div class="upgrade-buy">
+            <button class="buy-btn points-bg" data-upgrade="p3">Cost: <span class="cost-val">1,000</span></button>
+            <span class="level-display">Lv <span class="lvl-val">0</span></span>
+          </div>
+        </div>
+        <div class="upgrade-card repeatable" data-upgrade="p4">
+          <div class="upgrade-icon"><i class="fa-solid fa-rocket"></i></div>
+          <div class="upgrade-info">
+            <h3 class="upgrade-name">Hyper Boost</h3>
+            <p class="upgrade-desc">x3 Points gain per level</p>
+            <p class="upgrade-effect">Current: x<span class="eff-val">1</span></p>
+          </div>
+          <div class="upgrade-buy">
+            <button class="buy-btn points-bg" data-upgrade="p4">Cost: <span class="cost-val">50,000</span></button>
+            <span class="level-display">Lv <span class="lvl-val">0</span></span>
+          </div>
+        </div>
+        <div class="upgrade-card onetime" data-upgrade="p5">
+          <div class="upgrade-icon"><i class="fa-solid fa-explosion"></i></div>
+          <div class="upgrade-info">
+            <h3 class="upgrade-name">Critical Points</h3>
+            <p class="upgrade-desc">x10 Points gain (one-time)</p>
+            <p class="upgrade-effect">Current: <span class="eff-val">Inactive</span></p>
+          </div>
+          <div class="upgrade-buy">
+            <button class="buy-btn points-bg" data-upgrade="p5">Cost: <span class="cost-val">500,000</span></button>
+            <span class="level-display">One-time</span>
+          </div>
+        </div>
+        <div class="upgrade-card onetime" data-upgrade="p6">
+          <div class="upgrade-icon"><i class="fa-solid fa-link"></i></div>
+          <div class="upgrade-info">
+            <h3 class="upgrade-name">Point Synergy</h3>
+            <p class="upgrade-desc">Points boost themselves: log10(Points) multiplier (one-time)</p>
+            <p class="upgrade-effect">Current: <span class="eff-val">Inactive</span></p>
+          </div>
+          <div class="upgrade-buy">
+            <button class="buy-btn points-bg" data-upgrade="p6">Cost: <span class="cost-val">5e6</span></button>
+            <span class="level-display">One-time</span>
+          </div>
+        </div>
+        <div class="upgrade-card repeatable" data-upgrade="p7">
+          <div class="upgrade-icon"><i class="fa-solid fa-bolt-lightning"></i></div>
+          <div class="upgrade-info">
+            <h3 class="upgrade-name">Mega Amplifier</h3>
+            <p class="upgrade-desc">+10 base Points/s per level</p>
+            <p class="upgrade-effect">Current: +<span class="eff-val">0</span></p>
+          </div>
+          <div class="upgrade-buy">
+            <button class="buy-btn points-bg" data-upgrade="p7">Cost: <span class="cost-val">1e7</span></button>
+            <span class="level-display">Lv <span class="lvl-val">0</span></span>
+          </div>
+        </div>
+        <div class="upgrade-card repeatable" data-upgrade="p8">
+          <div class="upgrade-icon"><i class="fa-solid fa-fire"></i></div>
+          <div class="upgrade-info">
+            <h3 class="upgrade-name">Ultra Multiplier</h3>
+            <p class="upgrade-desc">x10 Points gain per level</p>
+            <p class="upgrade-effect">Current: x<span class="eff-val">1</span></p>
+          </div>
+          <div class="upgrade-buy">
+            <button class="buy-btn points-bg" data-upgrade="p8">Cost: <span class="cost-val">1e9</span></button>
+            <span class="level-display">Lv <span class="lvl-val">0</span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== BOOSTERS TAB ====== -->
+    <div class="tab-panel" id="panel-boosters">
+      <div class="panel-header">
+        <div class="panel-currency-display">
+          <span class="panel-amount boosters-color" id="panel-boosters-amount">0</span>
+          <span class="panel-label">Boosters</span>
+        </div>
+        <div class="panel-rate">Reset Points for Boosters</div>
+      </div>
+      <div class="reset-section">
+        <button class="reset-btn boosters-bg" id="btn-boosters-reset">
+          <i class="fa-solid fa-arrow-up"></i> Reset Points
+          <span class="reset-gain">Gain: +<span id="boosters-gain">0</span> Boosters</span>
+          <span class="reset-req">Requires: <span id="boosters-req">1,000</span> Points</span>
+        </button>
+        <p class="reset-info">Boosters multiply Points gain. First reset at 1,000 Points.</p>
+      </div>
+      <div class="upgrades-grid" id="upgrades-boosters">
+        <div class="upgrade-card repeatable" data-upgrade="b1">
+          <div class="upgrade-icon"><i class="fa-solid fa-arrow-up-right-dots"></i></div>
+          <div class="upgrade-info">
+            <h3 class="upgrade-name">Booster Power</h3>
+            <p class="upgrade-desc">Boosters x1.5 stronger per level</p>
+            <p class="upgrade-effect">Current: x<span class="eff-val">1</span></p>
+          </div>
+          <div class="upgrade-buy">
+            <button class="buy-btn boosters-bg" data-upgrade="b1">Cost: <span class="cost-val">3</span></button>
+            <span class="level-display">Lv <span class="lvl-val">0</span></span>
+          </div>
+        </div>
+        <div class="upgrade-card onetime" data-upgrade="b2">
+          <div class="upgrade-icon"><i class="fa-solid fa-robot"></i></div>
+          <div class="upgrade-info">
+            <h3 class="upgrade-name">Auto Points</h3>
+            <p class="upgrade-desc">Auto-buy Point Amplifier every 2s (one-time)</p>
+            <p class="upgrade-effect">Current: <span class="eff-val">Inactive</span></p>
+          </div>
+          <div class="upgrade-buy">
+            <button class="buy-btn boosters-bg" data-upgrade="b2">Cost: <span class="cost-val">5</span></button>
+            <span class="level-display">One-time</span>
+          </div>
+        </div>
+        <div class="upgrade-card repeatable" data-upgrade="b3">
+          <div class="upgrade-icon"><i class="fa-solid fa-angles-up"></i></div>
+          <div class="upgrade-info">
+            <h3 class="upgrade-name">Booster Boost</h3>
+            <p class="upgrade-desc">x2 Booster effect per level</p>
+            <p class="upgrade-effect">Current: x<span class="eff-val">1</span></p>
+          </div>
+          <div class="upgrade-buy">
+            <button class="buy-btn boosters-bg" data-upgrade="b3">Cost: <span class="cost-val">15</span></button>
+            <span class="level-display">Lv <span class="lvl-val">0</span></span>
+          </div>
+        </div>
+        <div class="upgrade-card onetime" data-upgrade="b4">
+          <div class="upgrade-icon"><i class="fa-solid fa-diagram-project"></i></div>
+          <div class="upgrade-info">
+            <h3 class="upgrade-name">Point Nexus</h3>
+            <p class="upgrade-desc">Points gain boosted by log10(Boosters+1) (one-time)</p>
+            <p class="upgrade-effect">Current: <span class="eff-val">Inactive</span></p>
+          </div>
+          <div class="upgrade-buy">
+            <button class="buy-btn boosters-bg" data-upgrade="b4">Cost: <span class="cost-val">30</span></button>
+            <span class="level-display">One-time</span>
+          </div>
+        </div>
+        <div class="upgrade-card repeatable" data-upgrade="b5">
+          <div class="upgrade-icon"><i class="fa-solid fa-jet-fighter-up"></i></div>
+          <div class="upgrade-info">
+            <h3 class="upgrade-name">Hyper Boosters</h3>
+            <p class="upgrade-desc">x3 Booster effect per level</p>
+            <p class="upgrade-effect">Current: x<span class="eff-val">1</span></p>
+          </div>
+          <div class="upgrade-buy">
+            <button class="buy-btn boosters-bg" data-upgrade="b5">Cost: <span class="cost-val">100</span></button>
+            <span class="level-display">Lv <span class="lvl-val">0</span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== PRESTIGE TAB ====== -->
+    <div class="tab-panel" id="panel-prestige">
+      <div class="panel-header">
+        <div class="panel-currency-display">
+          <span class="panel-amount prestige-color" id="panel-prestige-amount">0</span>
+          <span class="panel-label">Prestige</span>
+        </div>
+        <div class="panel-rate">Reset Points & Boosters for Prestige</div>
+      </div>
+      <div class="reset-section">
+        <button class="reset-btn prestige-bg" id="btn-prestige-reset">
+          <i class="fa-solid fa-star"></i> Reset Points & Boosters
+          <span class="reset-gain">Gain: +<span id="prestige-gain">0</span> Prestige</span>
+          <span class="reset-req">Requires: <span id="prestige-req">1e8</span> Points</span>
+        </button>
+        <p class="reset-info">Prestige applies an exponent to Points gain. First reset at 1e8 Points.</p>
+      </div>
+      <div class="upgrades-grid" id="upgrades-prestige">
+        <div class="upgrade-card repeatable" data-upgrade="pr1">
+          <div class="upgrade-icon"><i class="fa-solid fa-star-half-stroke"></i></div>
+          <div class="upgrade-info">
+            <h3 class="upgrade-name">Prestige Power</h3>
+            <p class="upgrade-desc">+0.1 Prestige exponent per level</p>
+            <p class="upgrade-effect">Current: +<span class="eff-val">0</span></p>
+          </div>
+          <div class="upgrade-buy">
+            <button class="buy-btn prestige-bg" data-upgrade="pr1">Cost: <span class="cost-val">3</span></button>
+            <span class="level-display">Lv <span class="lvl-val">0</span></span>
+          </div>
+        </div>
+        <div class="upgrade-card repeatable" data-upgrade="pr2">
+          <div class="upgrade-icon"><i class="fa-solid fa-star-of-life"></i></div>
+          <div class="upgrade-info">
+            <h3 class="upgrade-name">Prestige Multiplier</h3>
+            <p class="upgrade-desc">x2 flat Points multiplier per level</p>
+            <p class="upgrade-effect">Current: x<span class="eff-val">1</span></p>
+          </div>
+          <div class="upgrade-buy">
+            <button class="buy-btn prestige-bg" data-upgrade="pr2">Cost: <span class="cost-val">10</span></button>
+            <span class="level-display">Lv <span class="lvl-val">0</span></span>
+          </div>
+        </div>
+        <div class="upgrade-card onetime" data-upgrade="pr3">
+          <div class="upgrade-icon"><i class="fa-solid fa-robot"></i></div>
+          <div class="upgrade-info">
+            <h3 class="upgrade-name">Auto Boosters</h3>
+            <p class="upgrade-desc">Auto-reset Boosters every 5s when gain > 0 (one-time)</p>
+            <p class="upgrade-effect">Current: <span class="eff-val">Inactive</span></p>
+          </div>
+          <div class="upgrade-buy">
+            <button class="buy-btn prestige-bg" data-upgrade="pr3">Cost: <span class="cost-val">8</span></button>
+            <span class="level-display">One-time</span>
+          </div>
+        </div>
+        <div class="upgrade-card repeatable" data-upgrade="pr4">
+          <div class="upgrade-icon"><i class="fa-solid fa-sun"></i></div>
+          <div class="upgrade-info">
+            <h3 class="upgrade-name">Prestige Aura</h3>
+            <p class="upgrade-desc">x1.5 all gain per level</p>
+            <p class="upgrade-effect">Current: x<span class="eff-val">1</span></p>
+          </div>
+          <div class="upgrade-buy">
+            <button class="buy-btn prestige-bg" data-upgrade="pr4">Cost: <span class="cost-val">25</span></button>
+            <span class="level-display">Lv <span class="lvl-val">0</span></span>
+          </div>
+        </div>
+        <div class="upgrade-card onetime" data-upgrade="pr5">
+          <div class="upgrade-icon"><i class="fa-solid fa-trophy"></i></div>
+          <div class="upgrade-info">
+            <h3 class="upgrade-name">Prestige Mastery</h3>
+            <p class="upgrade-desc">Keep Point Amplifier on Prestige (one-time)</p>
+            <p class="upgrade-effect">Current: <span class="eff-val">Inactive</span></p>
+          </div>
+          <div class="upgrade-buy">
+            <button class="buy-btn prestige-bg" data-upgrade="pr5">Cost: <span class="cost-val">20</span></button>
+            <span class="level-display">One-time</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== TIME CUBES TAB ====== -->
+    <div class="tab-panel" id="panel-timecubes">
+      <div class="panel-header">
+        <div class="panel-currency-display">
+          <span class="panel-amount timecubes-color" id="panel-timecubes-amount">0</span>
+          <span class="panel-label">Time Cubes</span>
+        </div>
+        <div class="panel-rate">Reset Prestige for Time Cubes</div>
+      </div>
+      <div class="reset-section">
+        <button class="reset-btn timecubes-bg" id="btn-timecubes-reset">
+          <i class="fa-solid fa-cube"></i> Reset Prestige
+          <span class="reset-gain">Gain: +<span id="timecubes-gain">0</span> Time Cubes</span>
+          <span class="reset-req">Requires: <span id="timecubes-req">10</span> Prestige</span>
+        </button>
+        <p class="reset-info">Time Cubes multiply Points gain. First reset at 10 Prestige.</p>
+      </div>
+      <div class="upgrades-grid" id="upgrades-timecubes">
+        <div class="upgrade-card repeatable" data-upgrade="t1">
+          <div class="upgrade-icon"><i class="fa-solid fa-hourglass-half"></i></div>
+          <div class="upgrade-info">
+            <h3 class="upgrade-name">Time Warp</h3>
+            <p class="upgrade-desc">x2 Points gain per level</p>
+            <p class="upgrade-effect">Current: x<span class="eff-val">1</span></p>
+          </div>
+          <div class="upgrade-buy">
+            <button class="buy-btn timecubes-bg" data-upgrade="t1">Cost: <span class="cost-val">2</span></button>
+            <span class="level-display">Lv <span class="lvl-val">0</span></span>
+          </div>
+        </div>
+        <div class="upgrade-card repeatable" data-upgrade="t2">
+          <div class="upgrade-icon"><i class="fa-solid fa-gauge-high"></i></div>
+          <div class="upgrade-info">
+            <h3 class="upgrade-name">Temporal Acceleration</h3>
+            <p class="upgrade-desc">+0.05 Prestige exponent per level</p>
+            <p class="upgrade-effect">Current: +<span class="eff-val">0</span></p>
+          </div>
+          <div class="upgrade-buy">
+            <button class="buy-btn timecubes-bg" data-upgrade="t2">Cost: <span class="cost-val">5</span></button>
+            <span class="level-display">Lv <span class="lvl-val">0</span></span>
+          </div>
+        </div>
+        <div class="upgrade-card onetime" data-upgrade="t3">
+          <div class="upgrade-icon"><i class="fa-solid fa-robot"></i></div>
+          <div class="upgrade-info">
+            <h3 class="upgrade-name">Auto Prestige</h3>
+            <p class="upgrade-desc">Auto-reset Prestige every 5s when gain > 0 (one-time)</p>
+            <p class="upgrade-effect">Current: <span class="eff-val">Inactive</span></p>
+          </div>
+          <div class="upgrade-buy">
+            <button class="buy-btn timecubes-bg" data-upgrade="t3">Cost: <span class="cost-val">10</span></button>
+            <span class="level-display">One-time</span>
+          </div>
+        </div>
+        <div class="upgrade-card repeatable" data-upgrade="t4">
+          <div class="upgrade-icon"><i class="fa-solid fa-clock-rotate-left"></i></div>
+          <div class="upgrade-info">
+            <h3 class="upgrade-name">Time Dilation</h3>
+            <p class="upgrade-desc">x1.5 all gain per level</p>
+            <p class="upgrade-effect">Current: x<span class="eff-val">1</span></p>
+          </div>
+          <div class="upgrade-buy">
+            <button class="buy-btn timecubes-bg" data-upgrade="t4">Cost: <span class="cost-val">20</span></button>
+            <span class="level-display">Lv <span class="lvl-val">0</span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== ETERNITY TAB ====== -->
+    <div class="tab-panel" id="panel-eternity">
+      <div class="panel-header">
+        <div class="panel-currency-display">
+          <span class="panel-amount eternity-color" id="panel-eternity-amount">0</span>
+          <span class="panel-label">Eternity</span>
+        </div>
+        <div class="panel-rate">Reset Points through Time Cubes for Eternity</div>
+      </div>
+      <div class="reset-section">
+        <button class="reset-btn eternity-bg" id="btn-eternity-reset">
+          <i class="fa-solid fa-infinity"></i> Reset All Below
+          <span class="reset-gain">Gain: +<span id="eternity-gain">0</span> Eternity</span>
+          <span class="reset-req">Requires: <span id="eternity-req">1e15</span> Points</span>
+        </button>
+        <p class="reset-info">Eternity multiplies all gain. First reset at 1e15 Points.</p>
+      </div>
+      <div class="upgrades-grid" id="upgrades-eternity">
+        <div class="upgrade-card repeatable" data-upgrade="e1">
+          <div class="upgrade-icon"><i class="fa-solid fa-infinity"></i></div>
+          <div class="upgrade-info">
+            <h3 class="upgrade-name">Eternal Power</h3>
+            <p class="upgrade-desc">x3 all gain per level</p>
+            <p class="upgrade-effect">Current: x<span class="eff-val">1</span></p>
+          </div>
+          <div class="upgrade-buy">
+            <button class="buy-btn eternity-bg" data-upgrade="e1">Cost: <span class="cost-val">3</span></button>
+            <span class="level-display">Lv <span class="lvl-val">0</span></span>
+          </div>
+        </div>
+        <div class="upgrade-card onetime" data-upgrade="e2">
+          <div class="upgrade-icon"><i class="fa-solid fa-clock"></i></div>
+          <div class="upgrade-info">
+            <h3 class="upgrade-name">Time Mastery</h3>
+            <p class="upgrade-desc">Keep Prestige upgrades on Eternity (one-time)</p>
+            <p class="upgrade-effect">Current: <span class="eff-val">Inactive</span></p>
+          </div>
+          <div class="upgrade-buy">
+            <button class="buy-btn eternity-bg" data-upgrade="e2">Cost: <span class="cost-val">5</span></button>
+            <span class="level-display">One-time</span>
+          </div>
+        </div>
+        <div class="upgrade-card repeatable" data-upgrade="e3">
+          <div class="upgrade-icon"><i class="fa-solid fa-wind"></i></div>
+          <div class="upgrade-info">
+            <h3 class="upgrade-name">Eternal Momentum</h3>
+            <p class="upgrade-desc">x1.5 Points/s per level, scales with time this Eternity</p>
+            <p class="upgrade-effect">Current: x<span class="eff-val">1</span></p>
+          </div>
+          <div class="upgrade-buy">
+            <button class="buy-btn eternity-bg" data-upgrade="e3">Cost: <span class="cost-val">10</span></button>
+            <span class="level-display">Lv <span class="lvl-val">0</span></span>
+          </div>
+        </div>
+        <div class="upgrade-card onetime" data-upgrade="e4">
+          <div class="upgrade-icon"><i class="fa-solid fa-robot"></i></div>
+          <div class="upgrade-info">
+            <h3 class="upgrade-name">Auto Time Cubes</h3>
+            <p class="upgrade-desc">Auto-reset Time Cubes every 5s when gain > 0 (one-time)</p>
+            <p class="upgrade-effect">Current: <span class="eff-val">Inactive</span></p>
+          </div>
+          <div class="upgrade-buy">
+            <button class="buy-btn eternity-bg" data-upgrade="e4">Cost: <span class="cost-val">15</span></button>
+            <span class="level-display">One-time</span>
+          </div>
+        </div>
+        <div class="upgrade-card repeatable" data-upgrade="e5">
+          <div class="upgrade-icon"><i class="fa-solid fa-bolt"></i></div>
+          <div class="upgrade-info">
+            <h3 class="upgrade-name">Eternal Spark</h3>
+            <p class="upgrade-desc">x5 Points gain per level</p>
+            <p class="upgrade-effect">Current: x<span class="eff-val">1</span></p>
+          </div>
+          <div class="upgrade-buy">
+            <button class="buy-btn eternity-bg" data-upgrade="e5">Cost: <span class="cost-val">25</span></button>
+            <span class="level-display">Lv <span class="lvl-val">0</span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== FRAGMENTS TAB ====== -->
+    <div class="tab-panel" id="panel-fragments">
+      <div class="panel-header">
+        <div class="panel-currency-display">
+          <span class="panel-amount fragments-color" id="panel-fragments-amount">0</span>
+          <span class="panel-label">Fragments</span>
+        </div>
+        <div class="panel-rate">Reset Eternity for Fragments</div>
+      </div>
+      <div class="reset-section">
+        <button class="reset-btn fragments-bg" id="btn-fragments-reset">
+          <i class="fa-solid fa-gem"></i> Reset Eternity
+          <span class="reset-gain">Gain: +<span id="fragments-gain">0</span> Fragments</span>
+          <span class="reset-req">Requires: <span id="fragments-req">10</span> Eternity</span>
+        </button>
+        <p class="reset-info">Fragments boost all gain. First reset at 10 Eternity.</p>
+      </div>
+      <div class="upgrades-grid" id="upgrades-fragments">
+        <div class="upgrade-card repeatable" data-upgrade="f1">
+          <div class="upgrade-icon"><i class="fa-solid fa-hand-fist"></i></div>
+          <div class="upgrade-info">
+            <h3 class="upgrade-name">Fragment Force</h3>
+            <p class="upgrade-desc">x2 all gain per level</p>
+            <p class="upgrade-effect">Current: x<span class="eff-val">1</span></p>
+          </div>
+          <div class="upgrade-buy">
+            <button class="buy-btn fragments-bg" data-upgrade="f1">Cost: <span class="cost-val">3</span></button>
+            <span class="level-display">Lv <span class="lvl-val">0</span></span>
+          </div>
+        </div>
+        <div class="upgrade-card onetime" data-upgrade="f2">
+          <div class="upgrade-icon"><i class="fa-solid fa-wave-square"></i></div>
+          <div class="upgrade-info">
+            <h3 class="upgrade-name">Eternal Resonance</h3>
+            <p class="upgrade-desc">Keep Eternity upgrades on Fragment reset (one-time)</p>
+            <p class="upgrade-effect">Current: <span class="eff-val">Inactive</span></p>
+          </div>
+          <div class="upgrade-buy">
+            <button class="buy-btn fragments-bg" data-upgrade="f2">Cost: <span class="cost-val">5</span></button>
+            <span class="level-display">One-time</span>
+          </div>
+        </div>
+        <div class="upgrade-card repeatable" data-upgrade="f3">
+          <div class="upgrade-icon"><i class="fa-solid fa-flask"></i></div>
+          <div class="upgrade-info">
+            <h3 class="upgrade-name">Fragment Synthesis</h3>
+            <p class="upgrade-desc">x1.5 all gain per level</p>
+            <p class="upgrade-effect">Current: x<span class="eff-val">1</span></p>
+          </div>
+          <div class="upgrade-buy">
+            <button class="buy-btn fragments-bg" data-upgrade="f3">Cost: <span class="cost-val">15</span></button>
+            <span class="level-display">Lv <span class="lvl-val">0</span></span>
+          </div>
+        </div>
+        <div class="upgrade-card onetime" data-upgrade="f4">
+          <div class="upgrade-icon"><i class="fa-solid fa-robot"></i></div>
+          <div class="upgrade-info">
+            <h3 class="upgrade-name">Auto Eternity</h3>
+            <p class="upgrade-desc">Auto-reset Eternity every 5s when gain > 0 (one-time)</p>
+            <p class="upgrade-effect">Current: <span class="eff-val">Inactive</span></p>
+          </div>
+          <div class="upgrade-buy">
+            <button class="buy-btn fragments-bg" data-upgrade="f4">Cost: <span class="cost-val">10</span></button>
+            <span class="level-display">One-time</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== QUANTUM TAB ====== -->
+    <div class="tab-panel" id="panel-quantum">
+      <div class="panel-header">
+        <div class="panel-currency-display">
+          <span class="panel-amount quantum-color" id="panel-quantum-amount">0</span>
+          <span class="panel-label">Quantum</span>
+        </div>
+        <div class="panel-rate">Reset Points through Fragments for Quantum</div>
+      </div>
+      <div class="reset-section">
+        <button class="reset-btn quantum-bg" id="btn-quantum-reset">
+          <i class="fa-solid fa-atom"></i> Reset All Below
+          <span class="reset-gain">Gain: +<span id="quantum-gain">0</span> Quantum</span>
+          <span class="reset-req">Requires: <span id="quantum-req">1e40</span> Points</span>
+        </button>
+        <p class="reset-info">Quantum applies a massive exponent. First reset at 1e40 Points.</p>
+      </div>
+      <div class="upgrades-grid" id="upgrades-quantum">
+        <div class="upgrade-card repeatable" data-upgrade="q1">
+          <div class="upgrade-icon"><i class="fa-solid fa-atom"></i></div>
+          <div class="upgrade-info">
+            <h3 class="upgrade-name">Quantum Power</h3>
+            <p class="upgrade-desc">+0.15 Quantum exponent per level</p>
+            <p class="upgrade-effect">Current: +<span class="eff-val">0</span></p>
+          </div>
+          <div class="upgrade-buy">
+            <button class="buy-btn quantum-bg" data-upgrade="q1">Cost: <span class="cost-val">2</span></button>
+            <span class="level-display">Lv <span class="lvl-val">0</span></span>
+          </div>
+        </div>
+        <div class="upgrade-card repeatable" data-upgrade="q2">
+          <div class="upgrade-icon"><i class="fa-solid fa-shuffle"></i></div>
+          <div class="upgrade-info">
+            <h3 class="upgrade-name">Quantum Fluctuation</h3>
+            <p class="upgrade-desc">x5 all gain per level</p>
+            <p class="upgrade-effect">Current: x<span class="eff-val">1</span></p>
+          </div>
+          <div class="upgrade-buy">
+            <button class="buy-btn quantum-bg" data-upgrade="q2">Cost: <span class="cost-val">5</span></button>
+            <span class="level-display">Lv <span class="lvl-val">0</span></span>
+          </div>
+        </div>
+        <div class="upgrade-card onetime" data-upgrade="q3">
+          <div class="upgrade-icon"><i class="fa-solid fa-robot"></i></div>
+          <div class="upgrade-info">
+            <h3 class="upgrade-name">Auto Fragments</h3>
+            <p class="upgrade-desc">Auto-reset Fragments every 5s when gain > 0 (one-time)</p>
+            <p class="upgrade-effect">Current: <span class="eff-val">Inactive</span></p>
+          </div>
+          <div class="upgrade-buy">
+            <button class="buy-btn quantum-bg" data-upgrade="q3">Cost: <span class="cost-val">8</span></button>
+            <span class="level-display">One-time</span>
+          </div>
+        </div>
+        <div class="upgrade-card repeatable" data-upgrade="q4">
+          <div class="upgrade-icon"><i class="fa-solid fa-crown"></i></div>
+          <div class="upgrade-info">
+            <h3 class="upgrade-name">Quantum Supremacy</h3>
+            <p class="upgrade-desc">x2 all gain per level</p>
+            <p class="upgrade-effect">Current: x<span class="eff-val">1</span></p>
+          </div>
+          <div class="upgrade-buy">
+            <button class="buy-btn quantum-bg" data-upgrade="q4">Cost: <span class="cost-val">15</span></button>
+            <span class="level-display">Lv <span class="lvl-val">0</span></span>
+          </div>
+        </div>
+        <div class="upgrade-card onetime" data-upgrade="q5">
+          <div class="upgrade-icon"><i class="fa-solid fa-door-open"></i></div>
+          <div class="upgrade-info">
+            <h3 class="upgrade-name">Quantum Tunnel</h3>
+            <p class="upgrade-desc">Keep all lower upgrades on Quantum reset (one-time)</p>
+            <p class="upgrade-effect">Current: <span class="eff-val">Inactive</span></p>
+          </div>
+          <div class="upgrade-buy">
+            <button class="buy-btn quantum-bg" data-upgrade="q5">Cost: <span class="cost-val">20</span></button>
+            <span class="level-display">One-time</span>
+          </div>
+        </div>
+        <div class="upgrade-card repeatable" data-upgrade="q6">
+          <div class="upgrade-icon"><i class="fa-solid fa-circle-radiation"></i></div>
+          <div class="upgrade-info">
+            <h3 class="upgrade-name">Quantum Field</h3>
+            <p class="upgrade-desc">+0.1 Quantum exponent per level</p>
+            <p class="upgrade-effect">Current: +<span class="eff-val">0</span></p>
+          </div>
+          <div class="upgrade-buy">
+            <button class="buy-btn quantum-bg" data-upgrade="q6">Cost: <span class="cost-val">30</span></button>
+            <span class="level-display">Lv <span class="lvl-val">0</span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== SINGULARITY TAB ====== -->
+    <div class="tab-panel" id="panel-singularity">
+      <div class="panel-header">
+        <div class="panel-currency-display">
+          <span class="panel-amount singularity-color" id="panel-singularity-amount">0</span>
+          <span class="panel-label">Singularity</span>
+        </div>
+        <div class="panel-rate">The final reset layer. Reset everything.</div>
+      </div>
+      <div class="reset-section">
+        <button class="reset-btn singularity-bg" id="btn-singularity-reset">
+          <i class="fa-solid fa-sun"></i> Reset EVERYTHING
+          <span class="reset-gain">Gain: +<span id="singularity-gain">0</span> Singularity</span>
+          <span class="reset-req">Requires: <span id="singularity-req">1e80</span> Points</span>
+        </button>
+        <p class="reset-info">Singularity is the ultimate layer. Each one multiplies ALL gain enormously. First reset at 1e80 Points.</p>
+      </div>
+      <div class="upgrades-grid" id="upgrades-singularity">
+        <div class="upgrade-card repeatable" data-upgrade="s1">
+          <div class="upgrade-icon"><i class="fa-solid fa-sun"></i></div>
+          <div class="upgrade-info">
+            <h3 class="upgrade-name">Singularity Power</h3>
+            <p class="upgrade-desc">+0.5 Singularity exponent per level</p>
+            <p class="upgrade-effect">Current: +<span class="eff-val">0</span></p>
+          </div>
+          <div class="upgrade-buy">
+            <button class="buy-btn singularity-bg" data-upgrade="s1">Cost: <span class="cost-val">2</span></button>
+            <span class="level-display">Lv <span class="lvl-val">0</span></span>
+          </div>
+        </div>
+        <div class="upgrade-card repeatable" data-upgrade="s2">
+          <div class="upgrade-icon"><i class="fa-solid fa-expand"></i></div>
+          <div class="upgrade-info">
+            <h3 class="upgrade-name">Cosmic Multiplier</h3>
+            <p class="upgrade-desc">x10 all gain per level</p>
+            <p class="upgrade-effect">Current: x<span class="eff-val">1</span></p>
+          </div>
+          <div class="upgrade-buy">
+            <button class="buy-btn singularity-bg" data-upgrade="s2">Cost: <span class="cost-val">5</span></button>
+            <span class="level-display">Lv <span class="lvl-val">0</span></span>
+          </div>
+        </div>
+        <div class="upgrade-card onetime" data-upgrade="s3">
+          <div class="upgrade-icon"><i class="fa-solid fa-circle-nodes"></i></div>
+          <div class="upgrade-info">
+            <h3 class="upgrade-name">Cosmic Convergence</h3>
+            <p class="upgrade-desc">All layers gain +100% per Singularity (one-time)</p>
+            <p class="upgrade-effect">Current: <span class="eff-val">Inactive</span></p>
+          </div>
+          <div class="upgrade-buy">
+            <button class="buy-btn singularity-bg" data-upgrade="s3">Cost: <span class="cost-val">10</span></button>
+            <span class="level-display">One-time</span>
+          </div>
+        </div>
+        <div class="upgrade-card repeatable" data-upgrade="s4">
+          <div class="upgrade-icon"><i class="fa-solid fa-radiation"></i></div>
+          <div class="upgrade-info">
+            <h3 class="upgrade-name">Singularity Aura</h3>
+            <p class="upgrade-desc">x5 all gain per level</p>
+            <p class="upgrade-effect">Current: x<span class="eff-val">1</span></p>
+          </div>
+          <div class="upgrade-buy">
+            <button class="buy-btn singularity-bg" data-upgrade="s4">Cost: <span class="cost-val">20</span></button>
+            <span class="level-display">Lv <span class="lvl-val">0</span></span>
+          </div>
+        </div>
+        <div class="upgrade-card onetime" data-upgrade="s5">
+          <div class="upgrade-icon"><i class="fa-solid fa-robot"></i></div>
+          <div class="upgrade-info">
+            <h3 class="upgrade-name">Auto Quantum</h3>
+            <p class="upgrade-desc">Auto-reset Quantum every 5s when gain > 0 (one-time)</p>
+            <p class="upgrade-effect">Current: <span class="eff-val">Inactive</span></p>
+          </div>
+          <div class="upgrade-buy">
+            <button class="buy-btn singularity-bg" data-upgrade="s5">Cost: <span class="cost-val">15</span></button>
+            <span class="level-display">One-time</span>
+          </div>
+        </div>
+        <div class="upgrade-card onetime" data-upgrade="s6">
+          <div class="upgrade-icon"><i class="fa-solid fa-chess-king"></i></div>
+          <div class="upgrade-info">
+            <h3 class="upgrade-name">Final Form</h3>
+            <p class="upgrade-desc">x1e50 all gain (one-time, endgame)</p>
+            <p class="upgrade-effect">Current: <span class="eff-val">Inactive</span></p>
+          </div>
+          <div class="upgrade-buy">
+            <button class="buy-btn singularity-bg" data-upgrade="s6">Cost: <span class="cost-val">30</span></button>
+            <span class="level-display">One-time</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+</main>
+
+<!-- Toast notifications -->
+<div id="toast-container"></div>
+
+<!-- Settings modal -->
+<div id="modal-overlay" class="modal-overlay hidden">
+  <div class="modal-box">
+    <h2 class="modal-title">Settings</h2>
+    <div class="modal-body">
+      <div class="setting-row">
+        <span>Offline Progress</span>
+        <label class="toggle-switch">
+          <input type="checkbox" id="setting-offline" checked>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+      <div class="setting-row">
+        <span>Number Format</span>
+        <select id="setting-format">
+          <option value="mixed">Mixed (Scientific above 1e6)</option>
+          <option value="scientific">Always Scientific</option>
+          <option value="full">Full Numbers</option>
+        </select>
+      </div>
+      <div class="setting-row">
+        <span>Auto-save interval</span>
+        <select id="setting-autosave">
+          <option value="15">15 seconds</option>
+          <option value="30" selected>30 seconds</option>
+          <option value="60">60 seconds</option>
+          <option value="0">Disabled</option>
+        </select>
+      </div>
+      <div class="setting-row danger">
+        <span>Hard Reset</span>
+        <button id="btn-hard-reset" class="danger-btn">Delete All Save Data</button>
+      </div>
+    </div>
+    <button id="btn-close-modal" class="modal-close-btn"><i class="fa-solid fa-xmark"></i> Close</button>
+  </div>
+</div>
+
+<!-- Offline progress popup -->
+<div id="offline-overlay" class="modal-overlay hidden">
+  <div class="modal-box offline-box">
+    <h2 class="modal-title">Welcome Back</h2>
+    <div class="modal-body">
+      <p>You were away for <span id="offline-time">0</span>.</p>
+      <p>Earned <span id="offline-points" class="points-color">0</span> Points while away.</p>
+    </div>
+    <button id="btn-close-offline" class="modal-close-btn"><i class="fa-solid fa-check"></i> Collect</button>
+  </div>
+</div>
+
+</body>
+</html>
