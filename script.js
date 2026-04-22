@@ -187,8 +187,12 @@ function getPointsPerSecond() {
     let prestigeExp = 1 + Math.log10(game.prestige + 1) * 0.002 + getEffectTotal('addExp');
     let quantumExp = 1 + Math.log10(game.quantum + 1) * 0.01 + getEffectTotal('addQuantumExp');
     let singularityExp = 1 + Math.log10(game.singularity + 1) * 0.01 + getEffectTotal('addSingularityExp');
-
+    
+    // Apply the exact same 1.4 cap here for the visual display!
     let totalExp = Math.min(1.4, prestigeExp * quantumExp * singularityExp);
+    
+    // Changed to .toFixed(3) because exponents are so small now, 3 decimals looks better
+    document.getElementById('mult-exp').textContent = `^${isFinite(totalExp) ? totalExp.toFixed(3) : "∞"}`;
     let result = Math.pow(base * flatMult, totalExp);
     return Math.min(result, 1e300);
 }
