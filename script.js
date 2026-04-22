@@ -1,5 +1,5 @@
 // ============================================================
-// NEXUS ASCENSION — Game Logics (Balance & Buy Max Update)
+// NEXUS ASCENSION — Game Logic (Balance & Buy Max Update)
 // ============================================================
 
 // ---------- DATA DEFINITIONS ----------
