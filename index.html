@@ -6,7 +6,6 @@
 <title>Nexus Ascension</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
@@ -30,6 +29,12 @@
     </div>
   </div>
   <div id="header-right">
+    <!-- NEW: Buy Max Toggle moved here -->
+    <span class="header-toggle-label">MAX</span>
+    <label class="toggle-switch header-toggle" title="Toggle Buy Max">
+      <input type="checkbox" id="setting-buymax">
+      <span class="toggle-slider"></span>
+    </label>
     <button id="btn-save" class="header-btn" title="Save Game"><i class="fa-solid fa-floppy-disk"></i></button>
     <button id="btn-settings" class="header-btn" title="Settings"><i class="fa-solid fa-gear"></i></button>
   </div>
@@ -179,7 +184,7 @@
           <div class="upgrade-icon"><i class="fa-solid fa-forward"></i></div>
           <div class="upgrade-info">
             <h3 class="upgrade-name">Accelerator</h3>
-            <p class="upgrade-desc">x2.5 Points gain per level</p>
+            <p class="upgrade-desc">x3 Points gain per level</p>
             <p class="upgrade-effect">Current: x<span class="eff-val">1</span></p>
           </div>
           <div class="upgrade-buy">
@@ -191,7 +196,7 @@
           <div class="upgrade-icon"><i class="fa-solid fa-rocket"></i></div>
           <div class="upgrade-info">
             <h3 class="upgrade-name">Hyper Boost</h3>
-            <p class="upgrade-desc">x3 Points gain per level</p>
+            <p class="upgrade-desc">x5 Points gain per level</p>
             <p class="upgrade-effect">Current: x<span class="eff-val">1</span></p>
           </div>
           <div class="upgrade-buy">
@@ -353,7 +358,7 @@
           <div class="upgrade-icon"><i class="fa-solid fa-star-half-stroke"></i></div>
           <div class="upgrade-info">
             <h3 class="upgrade-name">Prestige Power</h3>
-            <p class="upgrade-desc">+0.1 Prestige exponent per level</p>
+            <p class="upgrade-desc">+0.007 Prestige exponent per level</p>
             <p class="upgrade-effect">Current: +<span class="eff-val">0</span></p>
           </div>
           <div class="upgrade-buy">
@@ -446,7 +451,7 @@
           <div class="upgrade-icon"><i class="fa-solid fa-gauge-high"></i></div>
           <div class="upgrade-info">
             <h3 class="upgrade-name">Temporal Acceleration</h3>
-            <p class="upgrade-desc">+0.05 Prestige exponent per level</p>
+            <p class="upgrade-desc">+0.007 Prestige exponent per level</p>
             <p class="upgrade-effect">Current: +<span class="eff-val">0</span></p>
           </div>
           <div class="upgrade-buy">
@@ -653,7 +658,7 @@
           <div class="upgrade-icon"><i class="fa-solid fa-atom"></i></div>
           <div class="upgrade-info">
             <h3 class="upgrade-name">Quantum Power</h3>
-            <p class="upgrade-desc">+0.15 Quantum exponent per level</p>
+            <p class="upgrade-desc">+0.007 Quantum exponent per level</p>
             <p class="upgrade-effect">Current: +<span class="eff-val">0</span></p>
           </div>
           <div class="upgrade-buy">
@@ -713,7 +718,7 @@
           <div class="upgrade-icon"><i class="fa-solid fa-circle-radiation"></i></div>
           <div class="upgrade-info">
             <h3 class="upgrade-name">Quantum Field</h3>
-            <p class="upgrade-desc">+0.1 Quantum exponent per level</p>
+            <p class="upgrade-desc">+0.007 Quantum exponent per level</p>
             <p class="upgrade-effect">Current: +<span class="eff-val">0</span></p>
           </div>
           <div class="upgrade-buy">
@@ -746,7 +751,7 @@
           <div class="upgrade-icon"><i class="fa-solid fa-sun"></i></div>
           <div class="upgrade-info">
             <h3 class="upgrade-name">Singularity Power</h3>
-            <p class="upgrade-desc">+0.5 Singularity exponent per level</p>
+            <p class="upgrade-desc">+0.007 Singularity exponent per level</p>
             <p class="upgrade-effect">Current: +<span class="eff-val">0</span></p>
           </div>
           <div class="upgrade-buy">
@@ -852,6 +857,7 @@
           <option value="0">Disabled</option>
         </select>
       </div>
+      <!-- NOTE: Buy Max toggle removed from here and moved to header -->
       <div class="setting-row danger">
         <span>Hard Reset</span>
         <button id="btn-hard-reset" class="danger-btn">Delete All Save Data</button>
@@ -872,6 +878,6 @@
     <button id="btn-close-offline" class="modal-close-btn"><i class="fa-solid fa-check"></i> Collect</button>
   </div>
 </div>
-  <script src="script.js"></script>
+
 </body>
 </html>
