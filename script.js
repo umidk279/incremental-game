@@ -410,8 +410,11 @@ function updateUI() {
 
         if (d.max === 1) {
             el.querySelector('.level-display').textContent = lvl > 0 ? "Purchased" : "One-time";
-        } else {
+        } else if (d.max === Infinity) {
             el.querySelector('.lvl-val').textContent = lvl;
+        } else {
+            // Shows "Lv 5 / 30" for capped upgrades
+            el.querySelector('.level-display').textContent = `Lv ${lvl} / ${d.max}`;
         }
 
         let effEl = el.querySelector('.eff-val');
