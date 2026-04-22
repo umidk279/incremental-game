@@ -12,11 +12,11 @@ const DATA = {
     p1: { name: "Point Amplifier", base: 10, mult: 1.2, tab: "points", type: "addBase", val: 1, max: Infinity },
     p2: { name: "Point Multiplier", base: 100, mult: 5.5, tab: "points", type: "multFlat", val: 2, max: Infinity },
     p3: { name: "Accelerator", base: 1000, mult: 8, tab: "points", type: "multFlat", val: 3, max: Infinity },
-    p4: { name: "Hyper Boost", base: 50000, mult: 28, tab: "points", type: "multFlat", val: 5, max: Infinity },
+    p4: { name: "Hyper Boost", base: 50000, mult: 28, tab: "points", type: "multFlat", val: 5, max: 20 },
     p5: { name: "Critical Points", base: 500000, mult: 1, tab: "points", type: "multFlat", val: 10, max: 1 },
     p6: { name: "Point Synergy", base: 5e6, mult: 1, tab: "points", type: "multSynergy", val: "points", max: 1 },
     p7: { name: "Mega Amplifier", base: 1e7, mult: 1.8, tab: "points", type: "addBase", val: 10, max: Infinity },
-    p8: { name: "Ultra Multiplier", base: 1e9, mult: 500, tab: "points", type: "multFlat", val: 10, max: Infinity },
+    p8: { name: "Ultra Multiplier", base: 1e9, mult: 500, tab: "points", type: "multFlat", val: 10, max: 15 },
 
     // Boosters Tab
     b1: { name: "Booster Power", base: 3, mult: 2, tab: "boosters", type: "boosterMult", val: 1.5, max: Infinity },
