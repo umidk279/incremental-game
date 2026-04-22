@@ -184,9 +184,9 @@ function getPointsPerSecond() {
 
     if (game.upgrades['s3'] > 0) flatMult *= Math.pow(2, game.singularity);
 
-    let prestigeExp = 1 + Math.log10(game.prestige + 1) * 0.001 + getEffectTotal('addExp');
-    let quantumExp = 1 + Math.log10(game.quantum + 1) * 0.02 + getEffectTotal('addQuantumExp');
-    let singularityExp = 1 + Math.log10(game.singularity + 1) * 0.02 + getEffectTotal('addSingularityExp');
+    let prestigeExp = 1 + Math.log10(game.prestige + 1) * 0.002 + getEffectTotal('addExp');
+    let quantumExp = 1 + Math.log10(game.quantum + 1) * 0.01 + getEffectTotal('addQuantumExp');
+    let singularityExp = 1 + Math.log10(game.singularity + 1) * 0.01 + getEffectTotal('addSingularityExp');
 
     let totalExp = prestigeExp * quantumExp * singularityExp;
     let result = Math.pow(base * flatMult, totalExp);
