@@ -188,7 +188,7 @@ function getPointsPerSecond() {
     let quantumExp = 1 + Math.log10(game.quantum + 1) * 0.01 + getEffectTotal('addQuantumExp');
     let singularityExp = 1 + Math.log10(game.singularity + 1) * 0.01 + getEffectTotal('addSingularityExp');
 
-    let totalExp = Math.min(1.25 prestigeExp * quantumExp * singularityExp);
+    let totalExp = Math.min(1.4 prestigeExp * quantumExp * singularityExp);
     let result = Math.pow(base * flatMult, totalExp);
     return Math.min(result, 1e300);
 }
