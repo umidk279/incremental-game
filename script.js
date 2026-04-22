@@ -10,8 +10,8 @@ const LAYER_REQS = { boosters: 1000, prestige: 1e8, timecubes: 10, eternity: 1e1
 const DATA = {
     // Points Tab (Updated mult values)
     p1: { name: "Point Amplifier", base: 8, mult: 1.2, tab: "points", type: "addBase", val: 1, max: Infinity },
-    p2: { name: "Point Multiplier", base: 100, mult: 5.5, tab: "points", type: "multFlat", val: 2, max: 60 },
-    p3: { name: "Accelerator", base: 1000, mult: 8, tab: "points", type: "multFlat", val: 3, max: 50 },
+    p2: { name: "Point Multiplier", base: 100, mult: 5.5, tab: "points", type: "multFlat", val: 2, max: 30 },
+    p3: { name: "Accelerator", base: 1000, mult: 8, tab: "points", type: "multFlat", val: 3, max: 30 },
     p4: { name: "Hyper Boost", base: 50000, mult: 28, tab: "points", type: "multFlat", val: 5, max: 20 },
     p5: { name: "Critical Points", base: 500000, mult: 1, tab: "points", type: "multFlat", val: 10, max: 1 },
     p6: { name: "Point Synergy", base: 5e6, mult: 1, tab: "points", type: "multSynergy", val: "points", max: 1 },
@@ -19,17 +19,17 @@ const DATA = {
     p8: { name: "Ultra Multiplier", base: 1e9, mult: 500, tab: "points", type: "multFlat", val: 10, max: 15 },
 
     // Boosters Tab
-    b1: { name: "Booster Power", base: 3, mult: 2, tab: "boosters", type: "boosterMult", val: 1.5, max: Infinity },
+    b1: { name: "Booster Power", base: 3, mult: 2, tab: "boosters", type: "boosterMult", val: 1.5, max: 30 },
     b2: { name: "Auto Points", base: 5, mult: 1, tab: "boosters", type: "autoPoints", val: 1, max: 1 },
-    b3: { name: "Booster Boost", base: 15, mult: 3, tab: "boosters", type: "boosterMult", val: 2, max: Infinity },
+    b3: { name: "Booster Boost", base: 15, mult: 3, tab: "boosters", type: "boosterMult", val: 2, max: 20 },
     b4: { name: "Point Nexus", base: 30, mult: 1, tab: "boosters", type: "multSynergy", val: "boosters", max: 1 },
-    b5: { name: "Hyper Boosters", base: 100, mult: 4, tab: "boosters", type: "boosterMult", val: 3, max: Infinity },
+    b5: { name: "Hyper Boosters", base: 100, mult: 4, tab: "boosters", type: "boosterMult", val: 3, max: 10 },
 
     // Prestige Tab (Updated exponent val)
     pr1: { name: "Prestige Power", base: 3, mult: 2, tab: "prestige", type: "addExp", val: 0.007, max: 15 },
-    pr2: { name: "Prestige Multiplier", base: 10, mult: 3, tab: "prestige", type: "multFlat", val: 2, max: Infinity },
+    pr2: { name: "Prestige Multiplier", base: 10, mult: 3, tab: "prestige", type: "multFlat", val: 2, max: 40 },
     pr3: { name: "Auto Boosters", base: 8, mult: 1, tab: "prestige", type: "autoBoosters", val: 1, max: 1 },
-    pr4: { name: "Prestige Aura", base: 25, mult: 2.5, tab: "prestige", type: "multFlat", val: 1.5, max: Infinity },
+    pr4: { name: "Prestige Aura", base: 25, mult: 2.5, tab: "prestige", type: "multFlat", val: 1.5, max: 20 },
     pr5: { name: "Prestige Mastery", base: 20, mult: 1, tab: "prestige", type: "keepUpgrades", val: "points", max: 1 },
 
     // Time Cubes Tab (Updated exponent val)
@@ -52,7 +52,7 @@ const DATA = {
     f4: { name: "Auto Eternity", base: 10, mult: 1, tab: "fragments", type: "autoEternity", val: 1, max: 1 },
 
     // Quantum Tab (Updated exponent val)
-    q1: { name: "Quantum Power", base: 2, mult: 3, tab: "quantum", type: "addQuantumExp", val: 0.007, max: Infinity },
+    q1: { name: "Quantum Power", base: 2, mult: 3, tab: "quantum", type: "addQuantumExp", val: 0.007, max: 10 },
     q2: { name: "Quantum Fluctuation", base: 5, mult: 5, tab: "quantum", type: "multFlat", val: 5, max: Infinity },
     q3: { name: "Auto Fragments", base: 8, mult: 1, tab: "quantum", type: "autoFragments", val: 1, max: 1 },
     q4: { name: "Quantum Supremacy", base: 15, mult: 2.5, tab: "quantum", type: "multFlat", val: 2, max: Infinity },
@@ -65,7 +65,7 @@ const DATA = {
     s3: { name: "Cosmic Convergence", base: 10, mult: 1, tab: "singularity", type: "singularityMult", val: 2, max: 1 },
     s4: { name: "Singularity Aura", base: 20, mult: 4, tab: "singularity", type: "multFlat", val: 5, max: Infinity },
     s5: { name: "Auto Quantum", base: 15, mult: 1, tab: "singularity", type: "autoQuantum", val: 1, max: 1 },
-    s6: { name: "Final Form", base: 30, mult: 1, tab: "singularity", type: "multFlat", val: 1e50, max: 1 }
+    s6: { name: "Final Form", base: 30, mult: 1, tab: "singularity", type: "multFlat", val: 1e10, max: 1 }
 };
 
 const MILESTONES = [
