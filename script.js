@@ -33,37 +33,37 @@ const DATA = {
     pr5: { name: "Prestige Mastery", base: 20, mult: 1, tab: "prestige", type: "keepUpgrades", val: "points", max: 1 },
 
     // Time Cubes Tab (Updated exponent val)
-    t1: { name: "Time Warp", base: 2, mult: 2, tab: "timecubes", type: "multFlat", val: 2, max: Infinity },
+    t1: { name: "Time Warp", base: 2, mult: 2, tab: "timecubes", type: "multFlat", val: 2, max: 25 },
     t2: { name: "Temporal Accel", base: 5, mult: 2.5, tab: "timecubes", type: "addExp", val: 0.007, max: 10 },
     t3: { name: "Auto Prestige", base: 10, mult: 1, tab: "timecubes", type: "autoPrestige", val: 1, max: 1 },
-    t4: { name: "Time Dilation", base: 20, mult: 2, tab: "timecubes", type: "multFlat", val: 1.5, max: Infinity },
+    t4: { name: "Time Dilation", base: 20, mult: 2, tab: "timecubes", type: "multFlat", val: 1.5, max: 25 },
 
     // Eternity Tab
-    e1: { name: "Eternal Power", base: 3, mult: 3, tab: "eternity", type: "eternityMult", val: 3, max: Infinity },
+    e1: { name: "Eternal Power", base: 3, mult: 3, tab: "eternity", type: "eternityMult", val: 3, max: 10 },
     e2: { name: "Time Mastery", base: 5, mult: 1, tab: "eternity", type: "keepUpgrades", val: "prestige", max: 1 },
-    e3: { name: "Eternal Momentum", base: 10, mult: 2, tab: "eternity", type: "eternityMult", val: 1.5, max: Infinity },
+    e3: { name: "Eternal Momentum", base: 10, mult: 2, tab: "eternity", type: "eternityMult", val: 1.5, max: 15 },
     e4: { name: "Auto Time Cubes", base: 15, mult: 1, tab: "eternity", type: "autoTimeCubes", val: 1, max: 1 },
-    e5: { name: "Eternal Spark", base: 25, mult: 5, tab: "eternity", type: "multFlat", val: 5, max: Infinity },
+    e5: { name: "Eternal Spark", base: 25, mult: 5, tab: "eternity", type: "multFlat", val: 5, max: 20 },
 
     // Fragments Tab
-    f1: { name: "Fragment Force", base: 3, mult: 2.5, tab: "fragments", type: "fragmentMult", val: 2, max: Infinity },
+    f1: { name: "Fragment Force", base: 3, mult: 2.5, tab: "fragments", type: "fragmentMult", val: 2, max: 10 },
     f2: { name: "Eternal Resonance", base: 5, mult: 1, tab: "fragments", type: "keepUpgrades", val: "eternity", max: 1 },
-    f3: { name: "Fragment Synthesis", base: 15, mult: 2, tab: "fragments", type: "fragmentMult", val: 1.5, max: Infinity },
+    f3: { name: "Fragment Synthesis", base: 15, mult: 2, tab: "fragments", type: "fragmentMult", val: 1.5, max: 15 },
     f4: { name: "Auto Eternity", base: 10, mult: 1, tab: "fragments", type: "autoEternity", val: 1, max: 1 },
 
     // Quantum Tab (Updated exponent val)
     q1: { name: "Quantum Power", base: 2, mult: 3, tab: "quantum", type: "addQuantumExp", val: 0.007, max: 10 },
-    q2: { name: "Quantum Fluctuation", base: 5, mult: 5, tab: "quantum", type: "multFlat", val: 5, max: Infinity },
+    q2: { name: "Quantum Fluctuation", base: 5, mult: 5, tab: "quantum", type: "multFlat", val: 5, max: 8 },
     q3: { name: "Auto Fragments", base: 8, mult: 1, tab: "quantum", type: "autoFragments", val: 1, max: 1 },
-    q4: { name: "Quantum Supremacy", base: 15, mult: 2.5, tab: "quantum", type: "multFlat", val: 2, max: Infinity },
+    q4: { name: "Quantum Supremacy", base: 15, mult: 2.5, tab: "quantum", type: "multFlat", val: 2, max: 12 },
     q5: { name: "Quantum Tunnel", base: 20, mult: 1, tab: "quantum", type: "keepUpgrades", val: "all", max: 1 },
     q6: { name: "Quantum Field", base: 30, mult: 3, tab: "quantum", type: "addQuantumExp", val: 0.007, max: 10 },
 
     // Singularity Tab (Updated exponent val)
     s1: { name: "Singularity Power", base: 2, mult: 2, tab: "singularity", type: "addSingularityExp", val: 0.007, max: 10 },
-    s2: { name: "Cosmic Multiplier", base: 5, mult: 10, tab: "singularity", type: "multFlat", val: 10, max: Infinity },
+    s2: { name: "Cosmic Multiplier", base: 5, mult: 10, tab: "singularity", type: "multFlat", val: 10, max: 10 },
     s3: { name: "Cosmic Convergence", base: 10, mult: 1, tab: "singularity", type: "singularityMult", val: 2, max: 1 },
-    s4: { name: "Singularity Aura", base: 20, mult: 4, tab: "singularity", type: "multFlat", val: 5, max: Infinity },
+    s4: { name: "Singularity Aura", base: 20, mult: 4, tab: "singularity", type: "multFlat", val: 5, max: 15 },
     s5: { name: "Auto Quantum", base: 15, mult: 1, tab: "singularity", type: "autoQuantum", val: 1, max: 1 },
     s6: { name: "Final Form", base: 30, mult: 1, tab: "singularity", type: "multFlat", val: 1e10, max: 1 }
 };
