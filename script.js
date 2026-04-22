@@ -9,7 +9,7 @@ const LAYER_REQS = { boosters: 1000, prestige: 1e8, timecubes: 10, eternity: 1e1
 
 const DATA = {
     // Points Tab (Updated mult values)
-    p1: { name: "Point Amplifier", base: 10, mult: 1.2, tab: "points", type: "addBase", val: 1, max: Infinity },
+    p1: { name: "Point Amplifier", base: 8, mult: 1.2, tab: "points", type: "addBase", val: 1, max: Infinity },
     p2: { name: "Point Multiplier", base: 100, mult: 5.5, tab: "points", type: "multFlat", val: 2, max: 60 },
     p3: { name: "Accelerator", base: 1000, mult: 8, tab: "points", type: "multFlat", val: 3, max: 50 },
     p4: { name: "Hyper Boost", base: 50000, mult: 28, tab: "points", type: "multFlat", val: 5, max: 20 },
