@@ -1,5 +1,5 @@
 // ============================================================
-// NEXUS ASCENSION — Game Logic (Final Bug-Free Build)
+// NEXUS ASCENSION — Game Logic (Balance & Buy Max Update)
 // ============================================================
 
 // ---------- DATA DEFINITIONS ----------
@@ -8,51 +8,59 @@ const LAYER_INDEX = { points: 0, boosters: 1, prestige: 2, timecubes: 3, eternit
 const LAYER_REQS = { boosters: 1000, prestige: 1e8, timecubes: 10, eternity: 1e15, fragments: 10, quantum: 1e40, singularity: 1e80 };
 
 const DATA = {
-    p1: { name: "Point Amplifier", base: 10, mult: 1.5, tab: "points", type: "addBase", val: 1, max: Infinity },
-    p2: { name: "Point Multiplier", base: 100, mult: 2.5, tab: "points", type: "multFlat", val: 2, max: Infinity },
-    p3: { name: "Accelerator", base: 1000, mult: 5, tab: "points", type: "multFlat", val: 2.5, max: Infinity },
-    p4: { name: "Hyper Boost", base: 50000, mult: 6, tab: "points", type: "multFlat", val: 3, max: Infinity },
+    // Points Tab (Updated mult values)
+    p1: { name: "Point Amplifier", base: 10, mult: 1.2, tab: "points", type: "addBase", val: 1, max: Infinity },
+    p2: { name: "Point Multiplier", base: 100, mult: 5.5, tab: "points", type: "multFlat", val: 2, max: Infinity },
+    p3: { name: "Accelerator", base: 1000, mult: 8, tab: "points", type: "multFlat", val: 3, max: Infinity },
+    p4: { name: "Hyper Boost", base: 50000, mult: 18, tab: "points", type: "multFlat", val: 5, max: Infinity },
     p5: { name: "Critical Points", base: 500000, mult: 1, tab: "points", type: "multFlat", val: 10, max: 1 },
     p6: { name: "Point Synergy", base: 5e6, mult: 1, tab: "points", type: "multSynergy", val: "points", max: 1 },
     p7: { name: "Mega Amplifier", base: 1e7, mult: 1.8, tab: "points", type: "addBase", val: 10, max: Infinity },
-    p8: { name: "Ultra Multiplier", base: 1e9, mult: 10, tab: "points", type: "multFlat", val: 10, max: Infinity },
+    p8: { name: "Ultra Multiplier", base: 1e9, mult: 35, tab: "points", type: "multFlat", val: 10, max: Infinity },
 
+    // Boosters Tab
     b1: { name: "Booster Power", base: 3, mult: 2, tab: "boosters", type: "boosterMult", val: 1.5, max: Infinity },
     b2: { name: "Auto Points", base: 5, mult: 1, tab: "boosters", type: "autoPoints", val: 1, max: 1 },
     b3: { name: "Booster Boost", base: 15, mult: 3, tab: "boosters", type: "boosterMult", val: 2, max: Infinity },
     b4: { name: "Point Nexus", base: 30, mult: 1, tab: "boosters", type: "multSynergy", val: "boosters", max: 1 },
     b5: { name: "Hyper Boosters", base: 100, mult: 4, tab: "boosters", type: "boosterMult", val: 3, max: Infinity },
 
-    pr1: { name: "Prestige Power", base: 3, mult: 2, tab: "prestige", type: "addExp", val: 0.1, max: Infinity },
+    // Prestige Tab (Updated exponent val)
+    pr1: { name: "Prestige Power", base: 3, mult: 2, tab: "prestige", type: "addExp", val: 0.007, max: Infinity },
     pr2: { name: "Prestige Multiplier", base: 10, mult: 3, tab: "prestige", type: "multFlat", val: 2, max: Infinity },
     pr3: { name: "Auto Boosters", base: 8, mult: 1, tab: "prestige", type: "autoBoosters", val: 1, max: 1 },
     pr4: { name: "Prestige Aura", base: 25, mult: 2.5, tab: "prestige", type: "multFlat", val: 1.5, max: Infinity },
     pr5: { name: "Prestige Mastery", base: 20, mult: 1, tab: "prestige", type: "keepUpgrades", val: "points", max: 1 },
 
+    // Time Cubes Tab (Updated exponent val)
     t1: { name: "Time Warp", base: 2, mult: 2, tab: "timecubes", type: "multFlat", val: 2, max: Infinity },
-    t2: { name: "Temporal Accel", base: 5, mult: 2.5, tab: "timecubes", type: "addExp", val: 0.05, max: Infinity },
+    t2: { name: "Temporal Accel", base: 5, mult: 2.5, tab: "timecubes", type: "addExp", val: 0.007, max: Infinity },
     t3: { name: "Auto Prestige", base: 10, mult: 1, tab: "timecubes", type: "autoPrestige", val: 1, max: 1 },
     t4: { name: "Time Dilation", base: 20, mult: 2, tab: "timecubes", type: "multFlat", val: 1.5, max: Infinity },
 
+    // Eternity Tab
     e1: { name: "Eternal Power", base: 3, mult: 3, tab: "eternity", type: "eternityMult", val: 3, max: Infinity },
     e2: { name: "Time Mastery", base: 5, mult: 1, tab: "eternity", type: "keepUpgrades", val: "prestige", max: 1 },
     e3: { name: "Eternal Momentum", base: 10, mult: 2, tab: "eternity", type: "eternityMult", val: 1.5, max: Infinity },
     e4: { name: "Auto Time Cubes", base: 15, mult: 1, tab: "eternity", type: "autoTimeCubes", val: 1, max: 1 },
     e5: { name: "Eternal Spark", base: 25, mult: 5, tab: "eternity", type: "multFlat", val: 5, max: Infinity },
 
+    // Fragments Tab
     f1: { name: "Fragment Force", base: 3, mult: 2.5, tab: "fragments", type: "fragmentMult", val: 2, max: Infinity },
     f2: { name: "Eternal Resonance", base: 5, mult: 1, tab: "fragments", type: "keepUpgrades", val: "eternity", max: 1 },
     f3: { name: "Fragment Synthesis", base: 15, mult: 2, tab: "fragments", type: "fragmentMult", val: 1.5, max: Infinity },
     f4: { name: "Auto Eternity", base: 10, mult: 1, tab: "fragments", type: "autoEternity", val: 1, max: 1 },
 
-    q1: { name: "Quantum Power", base: 2, mult: 3, tab: "quantum", type: "addQuantumExp", val: 0.15, max: Infinity },
+    // Quantum Tab (Updated exponent val)
+    q1: { name: "Quantum Power", base: 2, mult: 3, tab: "quantum", type: "addQuantumExp", val: 0.007, max: Infinity },
     q2: { name: "Quantum Fluctuation", base: 5, mult: 5, tab: "quantum", type: "multFlat", val: 5, max: Infinity },
     q3: { name: "Auto Fragments", base: 8, mult: 1, tab: "quantum", type: "autoFragments", val: 1, max: 1 },
     q4: { name: "Quantum Supremacy", base: 15, mult: 2.5, tab: "quantum", type: "multFlat", val: 2, max: Infinity },
     q5: { name: "Quantum Tunnel", base: 20, mult: 1, tab: "quantum", type: "keepUpgrades", val: "all", max: 1 },
-    q6: { name: "Quantum Field", base: 30, mult: 3, tab: "quantum", type: "addQuantumExp", val: 0.1, max: Infinity },
+    q6: { name: "Quantum Field", base: 30, mult: 3, tab: "quantum", type: "addQuantumExp", val: 0.007, max: Infinity },
 
-    s1: { name: "Singularity Power", base: 2, mult: 2, tab: "singularity", type: "addSingularityExp", val: 0.5, max: Infinity },
+    // Singularity Tab (Updated exponent val)
+    s1: { name: "Singularity Power", base: 2, mult: 2, tab: "singularity", type: "addSingularityExp", val: 0.007, max: Infinity },
     s2: { name: "Cosmic Multiplier", base: 5, mult: 10, tab: "singularity", type: "multFlat", val: 10, max: Infinity },
     s3: { name: "Cosmic Convergence", base: 10, mult: 1, tab: "singularity", type: "singularityMult", val: 2, max: 1 },
     s4: { name: "Singularity Aura", base: 20, mult: 4, tab: "singularity", type: "multFlat", val: 5, max: Infinity },
@@ -89,7 +97,7 @@ let game = {
     timePlayed: 0,
     lastTick: Date.now(),
     achievedMilestones: [],
-    settings: { offline: true, format: 'mixed', autosave: 30 }
+    settings: { offline: true, format: 'mixed', autosave: 30, buyMax: false } // Added buyMax
 };
 
 // ---------- CORE MATH ----------
@@ -97,6 +105,48 @@ function getUpgradeCost(id) {
     let d = DATA[id];
     let lvl = game.upgrades[id] || 0;
     return Math.floor(d.base * Math.pow(d.mult, lvl));
+}
+
+// Calculates how many of an upgrade you can buy with your current currency
+function getMaxBuyable(id) {
+    let d = DATA[id];
+    let currency = d.tab;
+    let currentCurrency = game[currency];
+    let lvl = game.upgrades[id] || 0;
+    let baseCost = d.base;
+    let mult = d.mult;
+
+    if (d.max !== Infinity) return (lvl < d.max) ? 1 : 0;
+
+    let costOfOne = getUpgradeCost(id);
+    if (currentCurrency < costOfOne) return 0;
+
+    if (mult === 1) {
+        return Math.floor(currentCurrency / costOfOne);
+    }
+
+    let n = Math.floor(
+        Math.log( (currentCurrency * (mult - 1) / (baseCost * Math.pow(mult, lvl))) + 1 ) / Math.log(mult)
+    );
+    
+    // Safety check for floating point inaccuracies
+    let tempCost = getBulkCost(id, n);
+    if (tempCost > currentCurrency) n--;
+    
+    return Math.max(0, n);
+}
+
+// Calculates the total cost of buying 'amount' levels at once
+function getBulkCost(id, amount) {
+    let d = DATA[id];
+    let lvl = game.upgrades[id] || 0;
+    let baseCost = d.base;
+    let mult = d.mult;
+
+    if (mult === 1) return baseCost * amount;
+
+    // Geometric series sum formula
+    return Math.floor(baseCost * Math.pow(mult, lvl) * (Math.pow(mult, amount) - 1) / (mult - 1));
 }
 
 function getEffectTotal(type) {
@@ -122,29 +172,23 @@ function getPointsPerSecond() {
     let base = 1 + getEffectTotal('addBase');
     let flatMult = getEffectTotal('multFlat');
 
-    // Synergies (log10(currency+1))
     if (game.upgrades['p6'] > 0) flatMult *= Math.max(1, Math.log10(game.points + 1));
     if (game.upgrades['b4'] > 0) flatMult *= Math.max(1, Math.log10(game.boosters + 1));
 
-    // Layer base multipliers
-    let boosterMult = (game.boosters + 1) * getEffectTotal('boosterMult');
+    // Changed to 3rd root (cube root)
+    let boosterMult = Math.cbrt(game.boosters + 1) * getEffectTotal('boosterMult');
     let eternityMult = (game.eternity + 1) * getEffectTotal('eternityMult');
     let fragmentMult = (game.fragments + 1) * getEffectTotal('fragmentMult');
 
     flatMult *= boosterMult * eternityMult * fragmentMult;
 
-    // Singularity extra mult
     if (game.upgrades['s3'] > 0) flatMult *= Math.pow(2, game.singularity);
 
-    // Exponents
     let prestigeExp = 1 + Math.log10(game.prestige + 1) * 0.5 + getEffectTotal('addExp');
     let quantumExp = 1 + Math.log10(game.quantum + 1) * 0.25 + getEffectTotal('addQuantumExp');
     let singularityExp = 1 + Math.log10(game.singularity + 1) * 0.1 + getEffectTotal('addSingularityExp');
 
     let totalExp = prestigeExp * quantumExp * singularityExp;
-    
-    // Prevent JS Infinity overflow crashing calculations. 
-    // Cap at 1e300 to safely reach the 1e200 endgame.
     let result = Math.pow(base * flatMult, totalExp);
     return Math.min(result, 1e300);
 }
@@ -187,12 +231,10 @@ function doReset(layerName) {
     game[layerName] += gain;
     let targetIdx = LAYER_INDEX[layerName];
 
-    // Reset lower tier currencies
     for (let i = 0; i < targetIdx; i++) {
         game[LAYER_CURRENCIES[i]] = 0;
     }
 
-    // Reset upgrades, checking for keep mechanics
     for (let id in DATA) {
         if ((game.upgrades[id] || 0) === 0) continue;
         let d = DATA[id];
@@ -210,13 +252,9 @@ function doReset(layerName) {
 }
 
 function shouldKeepUpgrade(upgId, resetLayerIdx) {
-    // Prestige Mastery keeps Points upgrades
     if (resetLayerIdx >= LAYER_INDEX['prestige'] && game.upgrades['pr5'] > 0 && DATA[upgId].tab === 'points') return true;
-    // Time Mastery keeps Prestige upgrades
     if (resetLayerIdx >= LAYER_INDEX['eternity'] && game.upgrades['e2'] > 0 && DATA[upgId].tab === 'prestige') return true;
-    // Eternal Resonance keeps Eternity upgrades
     if (resetLayerIdx >= LAYER_INDEX['fragments'] && game.upgrades['f2'] > 0 && DATA[upgId].tab === 'eternity') return true;
-    // Quantum Tunnel keeps ALL lower upgrades
     if (resetLayerIdx >= LAYER_INDEX['quantum'] && game.upgrades['q5'] > 0 && LAYER_INDEX[DATA[upgId].tab] < LAYER_INDEX['quantum']) return true;
     return false;
 }
@@ -224,17 +262,30 @@ function shouldKeepUpgrade(upgId, resetLayerIdx) {
 // ---------- PURCHASE LOGIC ----------
 function buyUpgrade(id) {
     let d = DATA[id];
-    let cost = getUpgradeCost(id);
-    let currency = d.tab;
     let lvl = game.upgrades[id] || 0;
+    let currency = d.tab;
 
     if (lvl >= d.max) return;
-    if (game[currency] < cost) return;
 
-    game[currency] -= cost;
-    game.upgrades[id] = lvl + 1;
+    // Buy Max Logic (Affected by Toggle)
+    if (game.settings.buyMax && d.max === Infinity) {
+        let amountToBuy = getMaxBuyable(id);
+        if (amountToBuy <= 0) return;
+        
+        let cost = getBulkCost(id, amountToBuy);
+        if (game[currency] < cost) return;
+        
+        game[currency] -= cost;
+        game.upgrades[id] = lvl + amountToBuy;
+    } else {
+        // Buy 1 Logic
+        let cost = getUpgradeCost(id);
+        if (game[currency] < cost) return;
 
-    // Visual flash
+        game[currency] -= cost;
+        game.upgrades[id] = lvl + 1;
+    }
+
     let el = document.querySelector(`.upgrade-card[data-upgrade="${id}"]`);
     if (el) {
         el.classList.add('flash');
@@ -248,10 +299,11 @@ function buyUpgrade(id) {
 let autoTimer = 0;
 function handleAutobuyers(dt) {
     autoTimer += dt;
-    if (autoTimer < 2) return; // Tick every 2 seconds
+    if (autoTimer < 2) return; 
     autoTimer = 0;
 
-    if (game.upgrades['b2'] > 0 && game.points >= getUpgradeCost('p1') && (game.upgrades['p1'] || 0) < DATA['p1'].max) buyUpgrade('p1');
+    // Auto-buyers now respect the Buy Max toggle automatically because buyUpgrade() checks it!
+    if (game.upgrades['b2'] > 0 && game.points >= getUpgradeCost('p1')) buyUpgrade('p1');
     if (game.upgrades['pr3'] > 0 && getResetGain('boosters') > 0) doReset('boosters');
     if (game.upgrades['t3'] > 0 && getResetGain('prestige') > 0) doReset('prestige');
     if (game.upgrades['e4'] > 0 && getResetGain('timecubes') > 0) doReset('timecubes');
@@ -263,9 +315,8 @@ function handleAutobuyers(dt) {
 // ---------- FORMATTING ----------
 function formatNum(num) {
     if (isNaN(num) || num < 0) return "0";
-    if (!isFinite(num)) return "Infinity"; // Prevent toFixed crash on Infinity
+    if (!isFinite(num)) return "Infinity"; 
     
-    // Show decimals for small numbers so you can see points ticking up from 0
     if (num < 10) return num.toFixed(2);
     if (num < 1000) return Math.floor(num).toString();
     if (num < 1e6) return Math.floor(num).toLocaleString();
@@ -289,7 +340,6 @@ function formatTime(seconds) {
 
 // ---------- UI UPDATES ----------
 function updateUI() {
-    // Currencies
     document.getElementById('points-amount').textContent = formatNum(game.points);
     document.getElementById('side-points').textContent = formatNum(game.points);
     document.getElementById('panel-points-amount').textContent = formatNum(game.points);
@@ -301,14 +351,12 @@ function updateUI() {
         if (panelEl) panelEl.textContent = formatNum(game[c]);
     });
 
-    // Rates
     let pps = getPointsPerSecond();
     document.getElementById('points-per-sec').textContent = formatNum(pps);
     document.getElementById('panel-points-rate').textContent = formatNum(pps);
     document.getElementById('mult-display').textContent = `x${formatNum(pps)}`;
     document.getElementById('mult-total').textContent = `${formatNum(pps)}/s`;
 
-    // Multipliers detail
     document.getElementById('mult-base').textContent = formatNum(1 + getEffectTotal('addBase'));
     document.getElementById('mult-flat').textContent = `x${formatNum(getEffectTotal('multFlat'))}`;
     
@@ -317,10 +365,8 @@ function updateUI() {
     let singularityExp = 1 + Math.log10(game.singularity + 1) * 0.1 + getEffectTotal('addSingularityExp');
     let totalExp = prestigeExp * quantumExp * singularityExp;
     
-    // Prevent toFixed crash if exponents hit Infinity
     document.getElementById('mult-exp').textContent = `^${isFinite(totalExp) ? totalExp.toFixed(2) : "∞"}`;
 
-    // Reset Buttons state
     ['boosters', 'prestige', 'timecubes', 'eternity', 'fragments', 'quantum', 'singularity'].forEach(layer => {
         let gain = getResetGain(layer);
         let btn = document.getElementById(`btn-${layer}-reset`);
@@ -341,31 +387,39 @@ function updateUI() {
         }
     });
 
-    // Upgrades
+    // Upgrades Loop
     for (let id in DATA) {
         let el = document.querySelector(`.upgrade-card[data-upgrade="${id}"]`);
         if (!el) continue;
         
         let d = DATA[id];
-        let cost = getUpgradeCost(id);
         let lvl = game.upgrades[id] || 0;
         let currency = d.tab;
+        let btn = el.querySelector('.buy-btn');
 
-        el.querySelector('.cost-val').textContent = formatNum(cost);
-        
+        // Dynamic Button Text based on Buy Max toggle
+        if (game.settings.buyMax && d.max === Infinity) {
+            let maxBuyable = getMaxBuyable(id);
+            let bulkCost = getBulkCost(id, maxBuyable);
+            btn.firstChild.textContent = maxBuyable > 0 ? `Buy x${maxBuyable}: ` : "Cost: ";
+            el.querySelector('.cost-val').textContent = maxBuyable > 0 ? formatNum(bulkCost) : formatNum(getUpgradeCost(id));
+        } else {
+            btn.firstChild.textContent = "Cost: ";
+            el.querySelector('.cost-val').textContent = formatNum(getUpgradeCost(id));
+        }
+
         if (d.max === 1) {
             el.querySelector('.level-display').textContent = lvl > 0 ? "Purchased" : "One-time";
         } else {
             el.querySelector('.lvl-val').textContent = lvl;
         }
 
-        // Effects display
         let effEl = el.querySelector('.eff-val');
         if (effEl) {
             if (d.type.startsWith('auto') || d.type === 'keepUpgrades') {
                 effEl.textContent = lvl > 0 ? "Active" : "Inactive";
             } else if (d.type === 'addBase' || d.type === 'addExp' || d.type === 'addQuantumExp' || d.type === 'addSingularityExp') {
-                effEl.textContent = (d.val * lvl).toFixed(2);
+                effEl.textContent = (d.val * lvl).toFixed(3); // Updated to 3 decimals to show 0.007 properly
             } else if (d.type === 'multSynergy') {
                 if (lvl > 0) {
                     let currVal = game[d.val] || 0;
@@ -379,12 +433,11 @@ function updateUI() {
             }
         }
 
-        let btn = el.querySelector('.buy-btn');
         if (lvl >= d.max) {
             btn.classList.add('purchased');
             btn.classList.remove('cant-afford');
             el.classList.add('purchased');
-        } else if (game[currency] < cost) {
+        } else if (game[currency] < getUpgradeCost(id)) { // Check against cost of 1 for visual affordability
             btn.classList.add('cant-afford');
             btn.classList.remove('purchased');
             el.classList.remove('purchased');
@@ -394,7 +447,6 @@ function updateUI() {
         }
     }
 
-    // Tab visibility (unlock layers when reached once)
     document.querySelectorAll('.tab-btn').forEach(btn => {
         let tab = btn.dataset.tab;
         if (tab === 'points') return;
@@ -405,7 +457,6 @@ function updateUI() {
         }
     });
 
-    // Milestones
     updateMilestones();
 }
 
@@ -447,7 +498,6 @@ function gameLoop() {
     let dt = (now - lastUpdate) / 1000;
     lastUpdate = now;
 
-    // Limit dt to prevent huge jumps on lag
     if (dt > 5) dt = 5;
 
     game.timePlayed += dt;
@@ -480,7 +530,6 @@ function loadGame() {
     if (save) {
         try {
             let parsed = JSON.parse(save);
-            // Merge carefully to handle new properties in updates
             for (let key in parsed) {
                 if (key === 'settings' && typeof parsed[key] === 'object') {
                     for (let subKey in parsed[key]) {
@@ -497,7 +546,6 @@ function loadGame() {
                 }
             }
 
-            // Offline Progress
             if (game.settings.offline) {
                 let now = Date.now();
                 let diff = (now - game.lastTick) / 1000;
@@ -513,7 +561,7 @@ function loadGame() {
             }
         } catch (e) {
             console.error("Failed to parse save data", e);
-            localStorage.removeItem('nexusAscensionSave'); // Wipe corrupted save
+            localStorage.removeItem('nexusAscensionSave'); 
         }
     }
     game.lastTick = Date.now();
@@ -567,7 +615,6 @@ window.addEventListener('resize', initCanvas);
 
 // ---------- EVENT LISTENERS ----------
 function initEvents() {
-    // Tab switching
     document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -577,7 +624,6 @@ function initEvents() {
         });
     });
 
-    // Upgrade buying
     document.querySelectorAll('.buy-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             let id = btn.dataset.upgrade;
@@ -585,7 +631,6 @@ function initEvents() {
         });
     });
 
-    // Reset buttons
     document.getElementById('btn-boosters-reset').addEventListener('click', () => doReset('boosters'));
     document.getElementById('btn-prestige-reset').addEventListener('click', () => doReset('prestige'));
     document.getElementById('btn-timecubes-reset').addEventListener('click', () => doReset('timecubes'));
@@ -594,7 +639,6 @@ function initEvents() {
     document.getElementById('btn-quantum-reset').addEventListener('click', () => doReset('quantum'));
     document.getElementById('btn-singularity-reset').addEventListener('click', () => doReset('singularity'));
 
-    // Header buttons
     document.getElementById('btn-save').addEventListener('click', saveGame);
     
     document.getElementById('btn-settings').addEventListener('click', () => {
@@ -607,12 +651,10 @@ function initEvents() {
 
     document.getElementById('btn-hard-reset').addEventListener('click', hardReset);
 
-    // Offline popup
     document.getElementById('btn-close-offline').addEventListener('click', () => {
         document.getElementById('offline-overlay').classList.add('hidden');
     });
 
-    // Settings sync
     document.getElementById('setting-offline').addEventListener('change', (e) => {
         game.settings.offline = e.target.checked;
     });
@@ -622,6 +664,14 @@ function initEvents() {
     document.getElementById('setting-autosave').addEventListener('change', (e) => {
         game.settings.autosave = parseInt(e.target.value);
         setupAutosave();
+    });
+    
+    // NEW: Header Buy Max Toggle Logic
+    document.getElementById('setting-buymax').addEventListener('change', (e) => {
+        game.settings.buyMax = e.target.checked;
+        // Toggle active visual class on the label
+        document.querySelector('.header-toggle-label').classList.toggle('active-label', game.settings.buyMax);
+        updateUI(); 
     });
 }
 
@@ -637,10 +687,15 @@ function setupAutosave() {
 function init() {
     loadGame();
     
-    // Sync settings UI
     document.getElementById('setting-offline').checked = game.settings.offline;
     document.getElementById('setting-format').value = game.settings.format;
     document.getElementById('setting-autosave').value = game.settings.autosave;
+    
+    // NEW: Sync Buy Max UI
+    document.getElementById('setting-buymax').checked = game.settings.buyMax;
+    if (document.querySelector('.header-toggle-label')) {
+        document.querySelector('.header-toggle-label').classList.toggle('active-label', game.settings.buyMax);
+    }
     
     initEvents();
     initCanvas();
@@ -651,5 +706,4 @@ function init() {
     requestAnimationFrame(gameLoop);
 }
 
-// Start the game
 init();
