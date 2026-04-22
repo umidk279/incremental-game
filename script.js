@@ -27,7 +27,7 @@ const DATA = {
 
     // Prestige Tab (Updated exponent val)
     pr1: { name: "Prestige Power", base: 3, mult: 2, tab: "prestige", type: "addExp", val: 0.007, max: 15 },
-    pr2: { name: "Prestige Multiplier", base: 10, mult: 3, tab: "prestige", type: "multFlat", val: 2, max: 40 },
+    pr2: { name: "Prestige Multiplier", base: 10, mult: 3, tab: "prestige", type: "multFlat", val: 2, max: 10 },
     pr3: { name: "Auto Boosters", base: 8, mult: 1, tab: "prestige", type: "autoBoosters", val: 1, max: 1 },
     pr4: { name: "Prestige Aura", base: 25, mult: 2.5, tab: "prestige", type: "multFlat", val: 1.5, max: 20 },
     pr5: { name: "Prestige Mastery", base: 20, mult: 1, tab: "prestige", type: "keepUpgrades", val: "points", max: 1 },
